@@ -7,9 +7,10 @@ Created on Mar 27, 2014
 from essentia import *
 from essentia.standard import *
 
-from Eval.Distance import *
-from Predict.OnsetNovelty.OnsetEssentia import *
-import Predict.Slice.cwt as cwt
+
+
+import Predict.OnsetNovelty as oN
+import Predict.Slice as sl
 from fileMgmt import *
 import matplotlib.pyplot as plt
 
@@ -29,7 +30,7 @@ def compute(path):
     audio = loader()
         
         
-    novelty = computeEss(audio,Config.comonOpt)
+    novelty = oN.compute(audio,Config.comonOpt)
         
     if any(isinstance(el, list) for el in novelty):           
         num=0
@@ -42,7 +43,7 @@ def compute(path):
             
         
         
-    t_ons = cwt.compute(novelty,Config.comonOpt)
+    t_ons = sl.compute(novelty,Config.comonOpt)
         
         
         

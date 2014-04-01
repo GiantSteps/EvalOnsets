@@ -1,5 +1,11 @@
 
-from Predict.Slice import *
+import cwt
+import EssentiaOnsets
+
+def compute(features,opt):
+    return cwt.compute(features, opt)
+    
+
 
 
 if __name__ == "__main__":
@@ -10,3 +16,4 @@ if __name__ == "__main__":
     tstarr = np.array([[2,3,4],[5,6,7]])
     cwt.compute(tstarr,curdic)
     EssentiaOnsets.compute(tstarr, curdic)
+    

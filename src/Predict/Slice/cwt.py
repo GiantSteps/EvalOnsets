@@ -19,14 +19,14 @@ def compute(features,opt):
     
     frameRate = opt['sampleRate']*1./opt['hopSize']
     t_ons=[]
-    
-    if any(isinstance(el, list) for el in features):
+    print type(features) 
+    if any(isinstance(el, list) for el in features) or (isinstance(features,np.ndarray) and features.shape[1]>1):
         t_ons = []
         for l in features:
-            t_ons += signal.find_peaks_cwt(l,np.arange(1,105))
+            t_ons += signal.find_peaks_cwt(l,np.arange(1,15))
 
     else:
-        t_ons = signal.find_peaks_cwt(features,np.arange(1,105))
+        t_ons = signal.find_peaks_cwt(features,np.arange(1,15))
             
             
 
