@@ -15,18 +15,28 @@ import numpy as np
 import scipy.signal as signal
 
 
-def compute(features,opt):
+
+opt = {"rmin":1,
+       "rmax":15}
+
+opt_ranges = {"rmin":[1,4],
+              "rmax":[10,20]}
+
+name = "peak_cwt"
+
+def compute(features,optc):
+    global opt
     
-    frameRate = opt['sampleRate']*1./opt['hopSize']
+    frameRate = optc['sampleRate']*1./optc['hopSize']
     t_ons=[]
      
     if any(isinstance(el, list) for el in features) or (isinstance(features,np.ndarray) and features.shape[1]>1):
         t_ons = []
         for l in features:
-            t_ons += signal.find_peaks_cwt(l,np.arange(1,15))
+            t_ons += signal.find_peaks_cwt(l,np.arange(opt["rmin"],opt["rmax"]))
 
     else:
-        t_ons = signal.find_peaks_cwt(features,np.arange(1,15))
+        t_ons = signal.find_peaks_cwt(features,np.arange(opt["rmin"],opt["rmax"]))
             
             
 

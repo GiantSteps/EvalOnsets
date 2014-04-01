@@ -1,6 +1,9 @@
 import essOnsetFunc
 import Nsdf
 
+curalgo = essOnsetFunc
+
+
 
 def compute(audio,opt):
-    return essOnsetFunc.compute(audio, opt)
+    return curalgo.compute(audio, opt)

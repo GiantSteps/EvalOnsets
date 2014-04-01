@@ -92,7 +92,13 @@ def analyze(pred,t,threshold):
         
 
 #         return np.mean(tb-predb);
-        return classification_report(tb,predb);       
+        pre,rec,f,dumb = precision_recall_fscore_support(tb,predb)
+        
+        return {"f-measure": f[1],
+                "precision": pre[1],
+                "recall":rec[1]
+                
+                }       
         
 
 def plot(t,p,tb,pb):  

@@ -21,7 +21,7 @@ def getonsets(fn):
 
     
 def crawlgt():
-    for (dirpath, dirnames, filenames) in walk(conf.ODBfiles):
+    for (dirpath, dirnames, filenames) in walk(conf.ODBgroundtruth):
     
         res = dict((x.split('.')[0],getonsets(dirpath+"/"+x)) for x in filenames if 'txt' in x)
     
