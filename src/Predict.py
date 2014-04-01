@@ -7,11 +7,11 @@ Created on Mar 27, 2014
 from essentia import *
 from essentia.standard import *
 
-from Distance import *
+from Eval.Distance import *
 from Onsets import *
 from fileMgmt import *
 from OnsetNovelty.extractorb import *
-import Slice as sl
+from Slice import Slice as sl
 import matplotlib.pyplot as plt
 
 comonOpt = {
