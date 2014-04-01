@@ -20,16 +20,12 @@ isPlot = False;
 onlyOne = False;
 
 
-exectime = time.clock()
-print exectime
 
 
 
 
-fns = crawlfn()
-gt = crawlgt()
-meas=[]
-for fn in fns:
+
+def eval(fn):
     path = fns[fn]
     if fromFile:
 #         pred = getonsets(Path.ODBPredicted+"/"+fn+".txt")
@@ -43,22 +39,43 @@ for fn in fns:
     
     print  pool.pool.descriptorNames()
     pred = pool.getn("pred")
+
+        
+        
+    return analyze(pred,gt[fn],0.08)
+
+
+
+
+def plot():
     plt.subplot(211)
     
-    meas+=[analyze(pred,gt[fn],0.08)]
-    plt.title(str(fn)+"/"+str(meas[-1]),loc= 'left')
-    if isPlot :
-        
-        nl =  pool.getNames("novelty")
-        print nl
-        for n in nl:
-            plt.plot([x*1./pool.getn(n,True) for x in range(len(pool.getn(n)))],pool.getn(n))
-            
-        plt.show()
     
-
-meas = np.array(meas)
-print meas
-# print np.mean(meas)
-
-print time.clock()-exectime
+    plt.title(str(fn)+"/"+str(meas[-1]),loc= 'left')
+    
+        
+    nl =  pool.getNames("novelty")
+    print nl
+    for n in nl:
+        plt.plot([x*1./pool.getn(n,True) for x in range(len(pool.getn(n)))],pool.getn(n))
+            
+    plt.show()
+    
+    
+    
+    
+    
+if __name__ == "__main__":
+    exectime = time.clock()
+    print exectime
+    fns = crawlfn()
+    gt = crawlgt()
+    meas=[]
+    for fn in fns:
+        meas+=[eval(fn)]
+        if isPlot: plot()
+    meas = np.array(meas)
+    print meas
+    # print np.mean(meas)
+    
+    print time.clock()-exectime

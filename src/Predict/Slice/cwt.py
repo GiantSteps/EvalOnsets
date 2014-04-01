@@ -15,7 +15,7 @@ import numpy as np
 import scipy.signal as signal
 
 
-def cwt(features,opt):
+def compute(features,opt):
     
     frameRate = opt['sampleRate']*1./opt['hopSize']
     t_ons=[]

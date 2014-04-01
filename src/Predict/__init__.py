@@ -9,7 +9,7 @@ from essentia.standard import *
 
 from Eval.Distance import *
 from Predict.OnsetNovelty.OnsetEssentia import *
-from Predict.Slice import *
+import Predict.Slice.cwt as cwt
 from fileMgmt import *
 import matplotlib.pyplot as plt
 
