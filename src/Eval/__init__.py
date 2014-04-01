@@ -13,7 +13,7 @@ from Eval.Distance import *
 import Predict
 from fileMgmt import *
 
-import Predict.Config as conf
+import Config as conf
 
 fromFile = False;
 isPlot = False;
@@ -37,7 +37,7 @@ def eval(fn):
         pool.writePool()
         pool.writePred()
     
-    print  pool.pool.descriptorNames()
+    
     pred = pool.getn("pred")
 
         
@@ -55,7 +55,7 @@ def plot():
     
         
     nl =  pool.getNames("novelty")
-    print nl
+    
     for n in nl:
         plt.plot([x*1./pool.getn(n,True) for x in range(len(pool.getn(n)))],pool.getn(n))
             
@@ -67,7 +67,7 @@ def plot():
     
 if __name__ == "__main__":
     exectime = time.clock()
-    print exectime
+    
     fns = crawlfn()
     gt = crawlgt()
     meas=[]
@@ -76,6 +76,6 @@ if __name__ == "__main__":
         if isPlot: plot()
     meas = np.array(meas)
     print meas
-    # print np.mean(meas)
     
-    print time.clock()-exectime
+    
+    print "execution time : "+str(time.clock()-exectime)
