@@ -3,17 +3,19 @@ Created on Apr 1, 2014
 
 @author: mhermant
 '''
-from essentia.standard import *
-import essentia
-import numpy as np 
 import sys
+
 from essentia import INFO
+import essentia
 from essentia.progress import Progress
+from essentia.standard import *
+
 import matplotlib.pyplot as plt
+import numpy as np 
 import scipy.signal as signal
 
 
-def peakcwt(features,opt):
+def cwt(features,opt):
     
     frameRate = opt['sampleRate']*1./opt['hopSize']
     t_ons=[]

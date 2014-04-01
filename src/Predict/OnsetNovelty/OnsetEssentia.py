@@ -15,17 +15,14 @@
 # You should have received a copy of the Affero GNU General Public License
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
-from essentia.standard import *
-import essentia
-import numpy as np 
 import sys
-from essentia import INFO
-from essentia.progress import Progress
-import matplotlib.pyplot as plt
-import scipy.signal as signal
 
-namespace = 'rhythm'
-dependencies = None
+from essentia import INFO
+import essentia
+from essentia.progress import Progress
+from essentia.standard import *
+
+
 
 
     

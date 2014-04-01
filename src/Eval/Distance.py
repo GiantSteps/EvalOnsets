@@ -3,12 +3,11 @@ Created on Mar 26, 2014
 
 @author: mhermant
 '''
-import cv2 as cv
-
-import numpy as np
 from sklearn.metrics import *
 
+import cv2 as cv
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 def toClass(pred,tru,threshold):

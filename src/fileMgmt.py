@@ -1,8 +1,10 @@
 from os import walk
 
-import numpy as np
 from essentia import *
 from essentia.standard import *
+
+import numpy as np
+
 
 ODBMedias = '/Users/mhermant/Documents/Work/Datasets/ODB/sounds'
 ODBfiles = '/Users/mhermant/Documents/Work/Datasets/ODB/ground-truth'

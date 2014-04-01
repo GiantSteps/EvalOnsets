@@ -8,18 +8,12 @@ from essentia import *
 from essentia.standard import *
 
 from Eval.Distance import *
-from fileMgmt import *
 from Predict.OnsetNovelty.OnsetEssentia import *
-from Slice import Slice as sl
+from Predict.Slice import *
+from fileMgmt import *
 import matplotlib.pyplot as plt
 
-comonOpt = {
-            "sampleRate":44100,
-            "frameSize":512,
-            "hopSize":512,
-            "zeroPadding":0,
-            "windowType":"hann"
-            }
+import Config
 
 
 def removeDoubles(time_onsets,threshold=0.08):
@@ -35,7 +29,7 @@ def compute(path):
     audio = loader()
         
         
-    novelty = computeEss(audio,comonOpt)
+    novelty = computeEss(audio,Config.comonOpt)
         
     if any(isinstance(el, list) for el in novelty):           
         num=0
@@ -48,7 +42,7 @@ def compute(path):
             
         
         
-    t_ons = sl.onsetEss(novelty,comonOpt)
+    t_ons = cwt.compute(novelty,Config.comonOpt)
         
         
         
@@ -63,7 +57,7 @@ def computeAll():
     for fn in fns:
         path = fns[fn]
         
-        pool.setPool(fn,comonOpt)
+        pool.setPool(fn,Config.comonOpt)
         compute(path)
     print "---------endcomputation--------"
     
