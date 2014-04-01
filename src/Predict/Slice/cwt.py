@@ -19,7 +19,7 @@ def compute(features,opt):
     
     frameRate = opt['sampleRate']*1./opt['hopSize']
     t_ons=[]
-    print type(features) 
+     
     if any(isinstance(el, list) for el in features) or (isinstance(features,np.ndarray) and features.shape[1]>1):
         t_ons = []
         for l in features:

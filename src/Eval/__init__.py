@@ -3,8 +3,7 @@ Created on Mar 27, 2014
 
 @author: mhermant
 '''
-import os
-import time
+
 
 from essentia import *
 from essentia.standard import *
@@ -13,11 +12,9 @@ from Eval.Distance import *
 import Predict
 from fileMgmt import *
 
-import Config as conf
 
-fromFile = False;
-isPlot = False;
-onlyOne = False;
+
+
 
 
 
@@ -27,7 +24,7 @@ onlyOne = False;
 
 def eval(fn):
     path = fns[fn]
-    if fromFile:
+    if conf.fromFile:
 #         pred = getonsets(Path.ODBPredicted+"/"+fn+".txt")
         pool.readPool(fn)
     else:
@@ -66,6 +63,10 @@ def plot():
     
     
 if __name__ == "__main__":
+    import time
+    import Config as conf
+    
+    
     exectime = time.clock()
     
     fns = crawlfn()
@@ -73,9 +74,9 @@ if __name__ == "__main__":
     meas=[]
     for fn in fns:
         meas+=[eval(fn)]
-        if isPlot: plot()
+        if conf.isPlot: plot()
     meas = np.array(meas)
     print meas
-    
+    # print np.mean(meas)
     
     print "execution time : "+str(time.clock()-exectime)

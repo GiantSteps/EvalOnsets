@@ -10,9 +10,19 @@ Structure
 * Eval : statistical tools for evaluating onsets prediction vs ground-truth
 
 
+
 How-To
 ---------
-Specify folders in 
+Specify folders in Config.py
+
+for already computed onset textfiles : run Eval/\_\_init\_\_.py
+
+for computing : specify desired methods in OnsetNovelty's and Slice's \_\_init\_\_.py then run Predict's init.py
+
+you can use last computation using pool cache (basicaly set fromFile=true in config.py)
+
+
+
 
 librairies needed:
 ------------

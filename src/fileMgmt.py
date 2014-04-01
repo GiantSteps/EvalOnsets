@@ -29,7 +29,7 @@ def crawlgt():
 
 def crawlfn():
     for (dirpath, dirnames, filenames) in walk(conf.ODBMedias):
-        res = dict((x.split('.')[0],dirpath+"/"+x) for x in filenames if 'wav' in x)
+        res = dict((x.split('.')[0],dirpath+"/"+x) for x in filenames if any(x.endswith(y) for y in ['.wav','.flac']) )
     return res
 
 
@@ -94,9 +94,10 @@ pool = PoolM()
 
 
 if __name__ == "__main__":
-    print crawlgt()
-    print crawlfn()
-    
+
+     print crawlgt()
+     print crawlfn()
+#     
 
 
 

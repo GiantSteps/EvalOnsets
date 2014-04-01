@@ -8,6 +8,7 @@ from sklearn.metrics import *
 import cv2 as cv
 import matplotlib.pyplot as plt
 import numpy as np
+import Config as conf
 
 
 def toClass(pred,tru,threshold):
@@ -87,27 +88,28 @@ def analyze(pred,t,threshold):
         predb,tb =  toBinPT(pred,t,2,True)
         
         
-        plotbin(tb,1)
-        plotbin(predb,2,"blue")
-        xm,xmm  = plt.xlim()
-        plt.xlim(0,xmm)
-        plt.subplot(212)
+        if conf.isPlot : plot(t,pred,tb,predb)
         
-        plotons(pred,1,"blue")
-        plotons(t,0)
-        xm,xmm  = plt.xlim()
-        plt.xlim(0,xmm)
+
 #         return np.mean(tb-predb);
         return classification_report(tb,predb);       
         
 
-def plotons(ons,num,color="red"):
-    plt.scatter(ons,[num for x in range(len(ons))],c=color,marker = "^",s=100)
+def plot(t,p,tb,pb):  
     
-def plotbin(onsb,num,color="red"):
-    plt.scatter([x for x in range(len(onsb))],onsb,marker = "o",s=200/num,c=color)
+    plt.scatter([x for x in range(len(tb))],tb,marker = "o",s=200/1,c="red")
+    plt.scatter([x for x in range(len(pb))],pb,marker = "o",s=200/2,c="blue")
+    xm,xmm  = plt.xlim()
+    plt.xlim(0,xmm)
+    
+    plt.subplot(212)
+
+    plt.scatter(t,[1 for x in range(len(t))],c="red",marker = "^",s=100)
+    plt.scatter(p,[0 for x in range(len(p))],c="blue",marker = "^",s=100)
+    xm,xmm  = plt.xlim()
+    plt.xlim(0,xmm)
             
-# def distEMD(a,b):
+# def distEMD(a,p):
 #     cv.calc
 #     cv.CalcEMD2
         # Convert from numpy array to CV_32FC1 Mat
@@ -115,7 +117,7 @@ def plotbin(onsb,num,color="red"):
 #     a32 = cv.CreateMat(a64.rows, a64.cols, cv.CV_32FC1)
 #     cv.Convert(a64, a32)
 #     
-#     b64 = cv.fromarray(b)
+#     b64 = cv.fromarray(p)
 #     b32 = cv.CreateMat(b64.rows, b64.cols, cv.CV_32FC1)
 #     cv.Convert(b64, b32)
 #     

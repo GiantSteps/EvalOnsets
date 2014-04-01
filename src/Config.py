@@ -7,16 +7,18 @@ Created on Apr 1, 2014
 '''
 path for 
 - sound files
-- ground truth
+- ground truth (read only)
 - essentia pool cache
-- onset text files prediction
+- onset text files prediction to write out
 '''
 
 
 ODBMedias = '/Users/mhermant/Documents/Work/Datasets/ODB/sounds'
-ODBfiles = '/Users/mhermant/Documents/Work/Datasets/ODB/ground-truth'
+ODBgroundtruth = '/Users/mhermant/Documents/Work/Datasets/ODB/ground-truth'
 ODBPool =  '/Users/mhermant/Documents/Work/Datasets/ODB/pool'
 ODBPredicted = ODBPool+'/predicted'
+
+
 
 '''
 Option for Onset Prediction
@@ -29,3 +31,11 @@ comonOpt = {
                 "zeroPadding":0,
                 "windowType":"hann"
                 }
+
+
+'''
+specific options
+'''
+fromFile = False;
+isPlot = False;
+onlyOne = False;
