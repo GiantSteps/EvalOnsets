@@ -1,10 +1,13 @@
 from os import walk
-import Path
+
 import numpy as np
 from essentia import *
 from essentia.standard import *
 
-
+ODBMedias = '/Users/mhermant/Documents/Work/Datasets/ODB/sounds'
+ODBfiles = '/Users/mhermant/Documents/Work/Datasets/ODB/ground-truth'
+ODBPool =  '/Users/mhermant/Documents/Work/Datasets/ODB/pool'
+ODBPredicted = ODBPool+'/predicted'
 
 def getonsets(fn):
     f = open(fn, 'r')
@@ -19,14 +22,14 @@ def getonsets(fn):
 
     
 def crawlgt():
-    for (dirpath, dirnames, filenames) in walk(Path.ODBfiles):
+    for (dirpath, dirnames, filenames) in walk(ODBfiles):
     
         res = dict((x.split('.')[0],getonsets(dirpath+"/"+x)) for x in filenames if 'txt' in x)
     
     return res
 
 def crawlfn():
-    for (dirpath, dirnames, filenames) in walk(Path.ODBMedias):
+    for (dirpath, dirnames, filenames) in walk(ODBMedias):
         res = dict((x.split('.')[0],dirpath+"/"+x) for x in filenames if 'wav' in x)
     return res
 
@@ -38,7 +41,7 @@ class PoolM:
     poolHead = ""
     curOpt ={"v":1}
     poolName = ""
-    poolDir = Path.ODBPool
+    poolDir =ODBPool
     poolPath = ""
     
     def readPool(self,fn=poolName):
@@ -56,7 +59,7 @@ class PoolM:
         YamlOutput(filename = self.poolPath)(self.pool)
     
     def writePred(self):
-        f=open(Path.ODBPredicted+"/"+self.poolName+".txt",'w')
+        f=open(ODBPredicted+"/"+self.poolName+".txt",'w')
         f.writelines([str(x)+'\n' for x in self.pool["pred.data"]])
         f.close()
         
