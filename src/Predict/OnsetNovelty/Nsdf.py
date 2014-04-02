@@ -13,6 +13,18 @@ from essentia.standard import *
 import matplotlib.pyplot as plt
 import numpy as np 
 import scipy.signal as signal
+import Utils.Configurable as confM
+
+
+opts = {"name":"Nsdf","minthresh" : 0.0000001}
+
+confM.linkparams(globals())
+
+
+def updateParams():
+    confM.getNamespace(opts["name"])
+
+
 
 
 def compute(audio,options):
@@ -49,7 +61,7 @@ def compute(audio,options):
         cr += [crestf(fftn)]
         pow = instPowf(frame)
         
-        if len(cr)>2 and pow<0.000001:
+        if len(cr)>2 and pow<opts["minthresh"]:
             
             cr[-1]=cr[-2]
         

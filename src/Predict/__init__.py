@@ -36,7 +36,7 @@ def compute(path):
         audio = path
         
         
-    novelty = oN.compute(audio,conf.comonOpt)
+    novelty = oN.compute(audio,conf.opts)
         
     if any(isinstance(el, list) for el in novelty):           
         num=0
@@ -48,7 +48,7 @@ def compute(path):
             
         
         
-    t_ons = sl.compute(novelty,conf.comonOpt)
+    t_ons = sl.compute(novelty,conf.opts)
         
         
         
@@ -67,7 +67,7 @@ def computeAll():
             print "reading from pool for" + fn
             pool.readPool(fn)
         else:
-            pool.setPool(fn,conf.comonOpt)
+            pool.setPool(fn,conf.opts)
             compute(path)
             pred = pool.getn("pred")
             pool.writePool()

@@ -145,7 +145,7 @@ class PoolM:
     def initPool(self):
         self.pool = Pool()
         self.poolHead = ""
-        self.curOpt =conf.comonOpt
+        self.curOpt =conf.opts
         self.poolName = ""
         self.poolDir =conf.ODBPool
         self.poolPath = ""
