@@ -10,7 +10,7 @@ from essentia.standard import *
 
 from Eval.Distance import *
 import Predict
-from fileMgmt import *
+from Config.fileMgmt import *
 
 
 
@@ -23,16 +23,8 @@ from fileMgmt import *
 
 
 def eval(fn):
-    path = fns[fn]
-    if conf.fromFile:
-#         pred = getonsets(Path.ODBPredicted+"/"+fn+".txt")
-        pool.readPool(fn)
-    else:
-        pool.setPool(fn,conf.comonOpt)
-        Predict.compute(path)
-        pred = pool.getn("pred")
-        pool.writePool()
-        pool.writePred()
+
+    Predict.computeAll()
     
     
     pred = pool.getn("pred")
@@ -64,13 +56,14 @@ def plot():
     
 if __name__ == "__main__":
     import time
-    import Config as conf
+from Config import Config as conf
     
     
     exectime = time.clock()
     
     fns = crawlfn()
     gt = crawlgt()
+#     selectRand(fns,gt,conf.onlyNRandomFiles)
     meas=[]
     for fn in fns:
         meas+=[eval(fn)]

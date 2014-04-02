@@ -11,10 +11,10 @@ from essentia.standard import *
 
 import Predict.OnsetNovelty as oN
 import Predict.Slice as sl
-from fileMgmt import *
+from Config.fileMgmt import *
 import matplotlib.pyplot as plt
 
-import Config
+from Config import Config
 
 
 def removeDoubles(time_onsets,threshold=0.08):
@@ -30,20 +30,19 @@ def compute(path):
     audio = loader()
         
         
-    novelty = oN.compute(audio,Config.comonOpt)
+    novelty = oN.compute(audio,Config.Config.comonOpt)
         
     if any(isinstance(el, list) for el in novelty):           
         num=0
         for l in novelty: 
             pool.set("novelty."+str(num),l)
-                
             num+=1
     else:
         pool.set("novelty.0",essentia.array(novelty))
             
         
         
-    t_ons = sl.compute(novelty,Config.comonOpt)
+    t_ons = sl.compute(novelty,Config.Config.comonOpt)
         
         
         
@@ -57,9 +56,17 @@ def computeAll():
     
     for fn in fns:
         path = fns[fn]
-        
-        pool.setPool(fn,Config.comonOpt)
-        compute(path)
+        if conf.fromFile or ( conf.skipComputed and isInPool(fn) ):
+    #         pred = getonsets(Path.ODBPredicted+fn+".txt")
+            print "reading from pool for" + fn
+            pool.readPool(fn)
+        else:
+            pool.setPool(fn,conf.comonOpt)
+            compute(path)
+            pred = pool.getn("pred")
+            pool.writePool()
+            pool.writePred()
+            
     print "---------endcomputation--------"
     
 

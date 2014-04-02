@@ -8,7 +8,7 @@ from sklearn.metrics import *
 import cv2 as cv
 import matplotlib.pyplot as plt
 import numpy as np
-import Config as conf
+from Config import Config as conf
 
 
 def toClass(pred,tru,threshold):
