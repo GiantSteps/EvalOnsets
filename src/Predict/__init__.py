@@ -16,6 +16,7 @@ import matplotlib.pyplot as plt
 
 import conf
 
+ESSENTIA_AUDIO = None
 
 def removeDoubles(time_onsets,threshold=0.08):
     t = 1
@@ -26,8 +27,13 @@ def removeDoubles(time_onsets,threshold=0.08):
         
 def compute(path):
 #     pool = fileMgmt.pool
-    loader = MonoLoader(filename=path)
-    audio = loader()
+
+    #SuperFlux wants to use scipy for its audio, let it
+    if ESSENTIA_AUDIO:
+        loader = MonoLoader(filename=path)
+        audio = loader()
+    else:
+        audio = path
         
         
     novelty = oN.compute(audio,conf.comonOpt)
