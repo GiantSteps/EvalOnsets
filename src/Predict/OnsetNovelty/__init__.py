@@ -14,5 +14,5 @@ curalgo = essOnsetFunc
 
 
 def compute(audio,opt):
-    
+    global curalgo
     return curalgo.compute(audio, opt)

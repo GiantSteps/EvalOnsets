@@ -56,7 +56,7 @@ if __name__ == "__main__":
     
     
     exectime = time.clock()
-    
+    crawlpaths()
     pgts = crawlpgt()
 #     gt = crawlgt()
 #     selectRand(fns,gt,conf.onlyNRandomFiles)
