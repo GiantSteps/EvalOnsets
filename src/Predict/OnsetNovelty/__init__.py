@@ -10,7 +10,7 @@ import Nsdf
 import SuperFluxOnsets
 import conf
 
-curalgo = globals()[conf.NoveltyName]#essOnsetFunc
+curalgo = globals()[conf.opts["NoveltyName"]]#essOnsetFunc
 
 
 

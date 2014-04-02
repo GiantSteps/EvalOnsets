@@ -26,8 +26,8 @@ merged into one dict for configuration management
 '''
 
 opts = {   "name":"globalSettings",
-                # curdirectories = ODBdirs
-                "curdirectories" : "JKU",
+                # curdataset = ODBdirs
+                "curdataset" : "ODB",
                 "configName" : "_default",
 
                 "NoveltyName": "Nsdf",
@@ -73,8 +73,8 @@ PathToLocal+='/'
 
 
 
-# PathToLocal = '/Users/mhermant/Documents/Work/Datasets/ODB/'
-PathToData = '/Volumes/GiantSteps-Share/datasets/'
+PathToData = '/Users/mhermant/Documents/Work/Datasets/'
+# PathToData = '/Volumes/GiantSteps-Share/datasets/'
 # PathToData = PathToLocal
 
 
@@ -85,11 +85,11 @@ path for
 - essentia pool cache
 - onset text files prediction to write out
 '''
-ODBMedias = PathToData+dirlist[opts['curdirectories']]["medias"]
-ODBgroundtruth = PathToData+dirlist[opts['curdirectories']]["gt"]
-ODBPool =  PathToLocal+opts['curdirectories']+"/"+opts['configName']+"/pool/"
-ODBPredicted = PathToLocal+opts['curdirectories']+"/"+opts['configName']+'/predicted/'
-ODBStats = PathToLocal+opts['curdirectories']+"/"+opts['configName']+'/stats/'
+ODBMedias = PathToData+dirlist[opts['curdataset']]["medias"]
+ODBgroundtruth = PathToData+dirlist[opts['curdataset']]["gt"]
+ODBPool =  PathToLocal+opts['curdataset']+"/"+opts['configName']+"/pool/"
+ODBPredicted = PathToLocal+opts['curdataset']+"/"+opts['configName']+'/predicted/'
+ODBStats = PathToLocal+opts['curdataset']+"/"+opts['configName']+'/stats/'
 
 
 
@@ -112,9 +112,10 @@ if not os.path.exists(ODBStats):
     os.makedirs(ODBStats)
  
  
+
  
 def updateconf():
-     confM.update(opts)
+    confM.update(opts)
     
 
 def initconf():
@@ -124,11 +125,11 @@ def initconf():
     
     
     global ODBMedias,ODBPool,ODBgroundtruth,ODBPredicted,ODBStats
-    ODBMedias = PathToData+dirlist[opts['curdirectories']]["medias"]
-    ODBgroundtruth = PathToData+dirlist[opts['curdirectories']]["gt"]
-    ODBPool =  PathToLocal+dirlist[opts['curdirectories']]["name"]+opts['configName']+"/pool/"
-    ODBPredicted = PathToLocal+dirlist[opts['curdirectories']]["name"]+opts['configName']+'/predicted/'
-    ODBStats = PathToLocal+dirlist[opts['curdirectories']]["name"]+opts['configName']+'/stats/'
+    ODBMedias = PathToData+dirlist[opts['curdataset']]["medias"]
+    ODBgroundtruth = PathToData+dirlist[opts['curdataset']]["gt"]
+    ODBPool =  PathToLocal+opts['curdataset']+"/"+opts['configName']+"/pool/"
+    ODBPredicted = PathToLocal+opts['curdataset']+"/"+opts['configName']+'/predicted/'
+    ODBStats = PathToLocal+opts['curdataset']+"/"+opts['configName']+'/stats/'
     
     if not os.path.exists(ODBPool):
         os.makedirs(ODBPool)
@@ -137,4 +138,5 @@ def initconf():
     if not os.path.exists(ODBStats):
         os.makedirs(ODBStats)
     
+initconf()
     

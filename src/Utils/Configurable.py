@@ -19,17 +19,18 @@ def linkparams(dict):
     setparams(dict['opts']["name"],dict["opts"],v_r)
 
 
-def update(dict):
-    dict = getNamespace(dict["name"])    
+def update(dictin):
+    dictin = getNamespace(dictin["name"])    
     
 def setparams(name,dict,rangedict={}):
-    
-    global params
-    for x,val in dict.iteritems():
-        params.set(name+'.'+x+".value",val)
-        if x in rangedict.keys():range = rangedict[x]
-        else : range = [0]
-        params.set(name+'.'+x+".range",range)
+    if not name in params.descriptorNames():
+        global params
+        for x,val in dict.iteritems():
+            params.set(name+'.'+x+".value",val)
+            if x in rangedict.keys():range = rangedict[x]
+            else : range = [0]
+            params.set(name+'.'+x+".range",range)
+    else : print "already added to conf pool"
     
 def getNamespace(name):
     global params
@@ -39,6 +40,7 @@ def getNamespace(name):
     
 def saveconf(fn):
     global params
+   
     YamlOutput(filename = fn)(params)
 
 def loadconf(fn):

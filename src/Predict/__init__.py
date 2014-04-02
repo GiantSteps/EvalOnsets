@@ -72,7 +72,7 @@ def computeAll():
             pred = pool.getn("pred")
             pool.writePool()
             pool.writePred()
-            
+    confM.saveconf(conf.ODBStats+"/config") 
     print "---------endcomputation--------"
     
 
@@ -81,6 +81,7 @@ if __name__=="__main__":
     import cStringIO
     import argparse
     import Utils
+    import Utils.Configurable as confM
     # define parser
     p = argparse.ArgumentParser(
         formatter_class=argparse.RawDescriptionHelpFormatter, description="")
@@ -91,12 +92,13 @@ if __name__=="__main__":
     
     if args.conf:
         print args.conf
-        conf.configName=args.conf
-    if args.nodebug:
-        sys.stdout = cStringIO.StringIO()
+        conf.opts["configName"]=args.conf
+#     if args.nodebug:
+#         sys.stdout = cStringIO.StringIO()
     
     conf.initconf()
     Utils.fileMgmt.init()
+    print confM.params.descriptorNames()
     computeAll()
 
     

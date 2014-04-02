@@ -42,7 +42,7 @@ def getGt(fn):
     
 
 def crawlpaths():
-
+    res = []
     for (dirpath, dirnames, filenames) in walk(conf.ODBMedias):
         if conf.onlyNRandomFiles>0:
             filenames2=[]

@@ -6,7 +6,7 @@ import SuperFluxPeaks
 import conf
 
 
-curalgo = globals()[conf.SliceName]#cwt
+curalgo = globals()[conf.opts["SliceName"]]#cwt
 
 def compute(features,opt):
     global curalgo
