@@ -11,10 +11,10 @@ from essentia.standard import *
 
 import Predict.OnsetNovelty as oN
 import Predict.Slice as sl
-from Config.fileMgmt import *
+from Utils.fileMgmt import *
 import matplotlib.pyplot as plt
 
-from Config import Config
+import conf
 
 
 def removeDoubles(time_onsets,threshold=0.08):
@@ -30,7 +30,7 @@ def compute(path):
     audio = loader()
         
         
-    novelty = oN.compute(audio,Config.Config.comonOpt)
+    novelty = oN.compute(audio,conf.comonOpt)
         
     if any(isinstance(el, list) for el in novelty):           
         num=0
@@ -42,7 +42,7 @@ def compute(path):
             
         
         
-    t_ons = sl.compute(novelty,Config.Config.comonOpt)
+    t_ons = sl.compute(novelty,conf.comonOpt)
         
         
         
@@ -52,7 +52,7 @@ def compute(path):
         
 
 def computeAll():
-    fns = crawlfn()
+    fns = crawlpaths()
     
     for fn in fns:
         path = fns[fn]

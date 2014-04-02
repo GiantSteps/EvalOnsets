@@ -10,7 +10,7 @@ from essentia.standard import *
 
 from Eval.Distance import *
 import Predict
-from Config.fileMgmt import *
+from Utils.fileMgmt import *
 
 
 
@@ -24,14 +24,10 @@ from Config.fileMgmt import *
 
 def eval(fn):
 
-    Predict.computeAll()
-    
-    
-    pred = pool.getn("pred")
 
+#     pred = pool.getn("pred")
         
-        
-    return analyze(pred,gt[fn],0.08)
+    return analyze(fn[0],fn[1],0.08)
 
 
 
@@ -56,18 +52,19 @@ def plot():
     
 if __name__ == "__main__":
     import time
-from Config import Config as conf
+    import conf
     
     
     exectime = time.clock()
     
-    fns = crawlfn()
-    gt = crawlgt()
+    pgts = crawlpgt()
+#     gt = crawlgt()
 #     selectRand(fns,gt,conf.onlyNRandomFiles)
     meas=[]
-    for fn in fns:
-        meas+=[eval(fn)]
+    for fn in pgts:
+        meas+=[eval(pgts[fn])]
         if conf.isPlot: plot()
+    writeStats(meas)
     meas = np.array(meas)
     print meas
     # print np.mean(meas)

@@ -5,10 +5,10 @@ Created on Mar 26, 2014
 '''
 from sklearn.metrics import *
 
-import cv2 as cv
+# import cv2 as cv
 import matplotlib.pyplot as plt
 import numpy as np
-from Config import Config as conf
+import conf
 
 
 def toClass(pred,tru,threshold):
