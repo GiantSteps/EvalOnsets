@@ -773,25 +773,6 @@ def compute(audio, options):
     
     args = staticArgs(options)
     
-    #Create an arguments object here so we don't use the parser()
-    class args: pass
-    
-    args.samplerate = options['sampleRate']
-    
-    args.norm = ''
-    args.fps = 200
-    args.frame_size = 2048
-    args.ratio = 0.5
-    args.max_bins = 3
-    args.log = None
-    args.mul = 1 
-    args.add = 1
-    args.online = None 
-    args.block_size = None
-    args.att = None
-    args.filter = None
-    args.diff_frames = None
-    
     filt = None
     filterbank = None
 
