@@ -21,7 +21,7 @@ for computing : specify desired methods in OnsetNovelty's and Slice's \_\_init\_
 
 you can use last computation using pool cache (basicaly set fromFile=true in config.py)
 
-
+Make sure to set the "src" directory as the PYTHONPATH to detect the packages.
 
 
 librairies needed:
