@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 
 import conf
 
-ESSENTIA_AUDIO = None
+ESSENTIA_AUDIO = True
 
 def removeDoubles(time_onsets,threshold=0.08):
     t = 1
@@ -77,8 +77,27 @@ def computeAll():
     
 
 if __name__=="__main__":
+    import sys
+    import cStringIO
+    import argparse
+    import Utils
+    # define parser
+    p = argparse.ArgumentParser(
+        formatter_class=argparse.RawDescriptionHelpFormatter, description="")
+    p.add_argument('-t', dest='nodebug', action='store_true', default=False,
+                   help='active console output')
+    p.add_argument('-conf')
+    args = p.parse_args()
+    
+    if args.conf:
+        print args.conf
+        conf.configName=args.conf
+    if args.nodebug:
+        sys.stdout = cStringIO.StringIO()
+    
+    conf.initconf()
+    Utils.fileMgmt.init()
     computeAll()
-    pool.writePool()
-    pool.writePred()
+
     
 

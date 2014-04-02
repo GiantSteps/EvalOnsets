@@ -2,9 +2,11 @@
 
 import cwt
 import EssentiaOnsets
+import SuperFluxPeaks
+import conf
 
 
-curalgo = cwt
+curalgo = globals()[conf.SliceName]#cwt
 
 def compute(features,opt):
     global curalgo
@@ -21,9 +23,9 @@ def getOptions():
 if __name__ == "__main__":
     
     import numpy as np
-    curalgo2 = cwt
+    
     curdic = {'sampleRate':10,'hopSize':10}
     tstarr = np.array([[2,3,4],[5,6,7]])
-    print curalgo2.compute(tstarr,curdic)
+    print curalgo.compute(tstarr,curdic)
 #     EssentiaOnsets.compute(tstarr, curdic)
     

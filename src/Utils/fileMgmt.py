@@ -142,27 +142,30 @@ def writeStats(l):
 
 
 class PoolM:
-    pool = Pool()
-    poolHead = ""
-    curOpt ={"v":1}
-    poolName = ""
-    poolDir =conf.ODBPool
-    poolPath = ""
+    def initPool(self):
+        self.pool = Pool()
+        self.poolHead = ""
+        self.curOpt =conf.comonOpt
+        self.poolName = ""
+        self.poolDir =conf.ODBPool
+        self.poolPath = ""
     
-    def readPool(self,fn=poolName):
-        self.poolName=fn
+    def readPool(self,fn=""):
+        if fn : self.poolName=fn
         self.poolPath = self.poolDir+fn+".pool"
         self.pool=YamlInput(filename = self.poolPath)()
         
-    def setPool(self,fn,opt=curOpt):
+    def setPool(self,fn,opt={}):
         self.pool.clear()
+        self.poolDir =conf.ODBPool
+        
         
         self.poolName = fn
         self.poolPath = self.poolDir+fn+".pool"
-        self.curOpt=opt
+        if opt : self.curOpt=opt
         
         
-    def writePool(self,fn=poolName):
+    def writePool(self,fn=""):
         YamlOutput(filename = self.poolPath)(self.pool)
     
     def writePred(self):
@@ -177,7 +180,7 @@ class PoolM:
         
 
         
-    def setPoolHead(self,nm,opt=curOpt):
+    def setPoolHead(self,nm,opt={}):
         self.poolHead = nm+"."
      
     
@@ -193,7 +196,7 @@ class PoolM:
         self.pool.set(self.poolHead+name+".frameRate",self.curOpt["sampleRate"]*1./self.curOpt["hopSize"])
         self.pool.set(self.poolHead+name+".data",data)
     
-    def setEvt(self,name,data,opt=curOpt):
+    def setEvt(self,name,data,opt={}):
         self.pool.set(self.poolHead+name+".frameRate",0)
         self.pool.set(self.poolHead+name+".data",data)
         
@@ -212,11 +215,16 @@ init
 instanciate pool manager
 crawl among audio file paths following configuration file
 '''
-    
 pool = PoolM()
-
+    
 curFiles = {}
 crawlpaths()
+
+
+def init():
+    global pool
+    pool.initPool()
+    crawlpaths()
 
 
 

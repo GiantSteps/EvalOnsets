@@ -12,7 +12,7 @@ specific options
 
 
 fromFile = False;
-skipComputed = True;
+skipComputed = False;
 isPlot = False;
 onlyNRandomFiles = 0;
 
@@ -40,16 +40,17 @@ config for dataset used and user defined name of configuration
 '''
 # curdirectories = ODBdirs
 curdirectories = JKUdirs
-configName = "Name"
+configName = "_default"
 
-
+NoveltyName= "Nsdf"
+SliceName = "EssentiaOnsets"
 
 
 
 dir = os.path.dirname(__file__)
-PathToLocal = os.path.realpath('../../cache/')#os.path.join(dir, '../cache')
+PathToLocal = os.path.realpath('../cache/')#os.path.join(dir, '../cache')
 PathToLocal+='/'
-print PathToLocal
+# print PathToLocal
 
 
 
@@ -67,9 +68,9 @@ path for
 '''
 ODBMedias = PathToData+curdirectories["medias"]
 ODBgroundtruth = PathToData+curdirectories["gt"]
-ODBPool =  PathToLocal+curdirectories["name"]+configName+"/pool/"
-ODBPredicted = PathToLocal+curdirectories["name"]+configName+'/predicted/'
-ODBStats = PathToLocal+curdirectories["name"]+configName+'/stats/'
+ODBPool =  PathToLocal+curdirectories["name"]+"/"+configName+"/pool/"
+ODBPredicted = PathToLocal+curdirectories["name"]+"/"+configName+'/predicted/'
+ODBStats = PathToLocal+curdirectories["name"]+"/"+configName+'/stats/'
 
 
 
@@ -99,4 +100,22 @@ if not os.path.exists(ODBPool):
 if not os.path.exists(ODBPredicted):
     os.makedirs(ODBPredicted) 
 if not os.path.exists(ODBStats):
-    os.makedirs(ODBStats) 
+    os.makedirs(ODBStats)
+    
+
+def initconf():
+    global ODBMedias,ODBPool,ODBgroundtruth,ODBPredicted,ODBStats
+    ODBMedias = PathToData+curdirectories["medias"]
+    ODBgroundtruth = PathToData+curdirectories["gt"]
+    ODBPool =  PathToLocal+curdirectories["name"]+configName+"/pool/"
+    ODBPredicted = PathToLocal+curdirectories["name"]+configName+'/predicted/'
+    ODBStats = PathToLocal+curdirectories["name"]+configName+'/stats/'
+    
+    if not os.path.exists(ODBPool):
+        os.makedirs(ODBPool)
+    if not os.path.exists(ODBPredicted):
+        os.makedirs(ODBPredicted) 
+    if not os.path.exists(ODBStats):
+        os.makedirs(ODBStats)
+    
+    
