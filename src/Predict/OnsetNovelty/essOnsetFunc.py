@@ -6,19 +6,20 @@ import essentia
 from essentia.progress import Progress
 from essentia.standard import *
 import numpy as np
+import conf
 
 
 opts={'name' : 'essOnsetFunc',
       'lala':2}
 
     
-def compute(audio, options):
-
-    sampleRate  = options['sampleRate']
-    frameSize   = options['frameSize']
-    hopSize     = options['hopSize']
-    zeroPadding = options['zeroPadding']
-    windowType  = options['windowType']
+def compute(audio):
+    audio = essentia.array(audio)
+    sampleRate  = conf.opts['sampleRate']
+    frameSize   = conf.opts['frameSize']
+    hopSize     = conf.opts['hopSize']
+    zeroPadding = conf.opts['zeroPadding']
+    windowType  = conf.opts['windowType']
 
     frameRate = float(sampleRate)/float(hopSize)
 

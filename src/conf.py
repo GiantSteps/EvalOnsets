@@ -104,7 +104,7 @@ Set the root path for your dataset here
 PathToData = '/Users/carthach/GiantSteps-Share/datasets/'
 
 #Martin
-#PathToData = '/Users/mhermant/Documents/Work/Datasets/'
+PathToData = '/Users/mhermant/Documents/Work/Datasets/'
 
 #PathToData = '/Volumes/GiantSteps-Share/datasets/'
 # PathToData = PathToLocal
@@ -126,31 +126,25 @@ ODBStats = PathToLocal+opts['curdataset']+"/"+opts['configName']+'/stats/'
 
 onsetsufix = ['.txt','.onsets','.onset']
 
-'''
-create cache folders
-
-MARTIN - this is a dupe of initconf no? Should delete...
-'''
-
-# if not os.path.exists(ODBPool):
-#     os.makedirs(ODBPool)
-# if not os.path.exists(ODBPredicted):
-#     os.makedirs(ODBPredicted) 
-# if not os.path.exists(ODBStats):
-#     os.makedirs(ODBStats)
  
- 
-def updateconf():
-    confM.update(opts)
-    
 
-def initconf():    
+def loadFromConf():
+    import Utils.Configurable as confM
+    opts = confM.getNamespace('globalSettings')
+    initconf()
+
+
+def initconf():
+        
     global ODBMedias,ODBPool,ODBgroundtruth,ODBPredicted,ODBStats
     ODBMedias = PathToData+dirlist[opts['curdataset']]["medias"]
     ODBgroundtruth = PathToData+dirlist[opts['curdataset']]["gt"]
     ODBPool =  PathToLocal+opts['curdataset']+"/"+opts['configName']+"/pool/"
     ODBPredicted = PathToLocal+opts['curdataset']+"/"+opts['configName']+'/predicted/'
     ODBStats = PathToLocal+opts['curdataset']+"/"+opts['configName']+'/stats/'
+    
+    
+    
     
     print ODBPredicted
     if not os.path.exists(ODBPool):

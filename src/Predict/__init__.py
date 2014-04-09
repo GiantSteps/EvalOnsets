@@ -35,9 +35,11 @@ def compute(path):
         loader = MonoLoader(filename=path)
         audio = loader()
         
+        audio = pp.compute(audio)
         
         
-    novelty = oN.compute(audio,conf.opts)
+      
+    novelty = oN.compute(audio)
         
     if len(novelty) and (isinstance(novelty[0], list) or isinstance(novelty[0],np.ndarray)):           
         num=0
@@ -76,7 +78,9 @@ def computeAll():
             pool.writePred()
     
     print "---------endcomputation--------"
-    
+
+
+
 
 def main():
     import sys
@@ -84,19 +88,7 @@ def main():
     import argparse
     import Utils
     import Utils.Configurable as confM
-    # define parser
-#     p = argparse.ArgumentParser(
-#         formatter_class=argparse.RawDescriptionHelpFormatter, description="")
-#     p.add_argument('-t', dest='nodebug', action='store_true', default=False,
-#                    help='active console output')
-#     p.add_argument('-conf')
-#     args = p.parse_args()
-#     
-#     if args.conf:
-#         print args.conf
-#         conf.opts["configName"]=args.conf
-#     if args.nodebug:
-#         sys.stdout = cStringIO.StringIO()
+
     
     conf.initconf()
     

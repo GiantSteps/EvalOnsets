@@ -4,7 +4,7 @@ Created on Apr 2, 2014
 @author: mhermant
 '''
 import numpy as np
-import Utils.Configurable as confM
+# import Utils.Configurable as confM
 
 # confM.getNamespace("att")
 
@@ -27,3 +27,4 @@ def compute(audio):
         att = np.power(np.sqrt(10.), opts['att'] / 10.)
         audio = np.asarray(audio / att, dtype=audio.dtype)
     
+    return audio

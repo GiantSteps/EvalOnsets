@@ -7,6 +7,17 @@ from essentia import *
 from essentia.standard import *
 
 
+import Predict.Preprocess as pp
+import Predict.OnsetNovelty as oN
+import Predict.Slice as sL
+import Predict
+import Eval
+
+
+import conf
+import Utils
+
+
 params = Pool()
 ranges = Pool()
 
@@ -16,7 +27,43 @@ curHead = ""
 
 
 
+ 
+
+def crawlParams():
+    '''
+    get all curent parameters
+    '''
+    params.clear()
+    linkparams(conf)
+    linkparams(pp)
+    print params.descriptorNames()
+    linkparams(oN.curalgo)
+    print params.descriptorNames()
+    linkparams(sL.curalgo)
+    print params.descriptorNames()
+
+
+def setConfig():
+    '''
+    set all current parameters
+    '''
+    conf.loadFromConf()
+    
+    
+    Utils.fileMgmt.init()
+    
+    pp.loadFromConf()
+    oN.loadFromConf()
+    sL.loadFromConf()
+    
+
+
+
 def linkparams(algo):
+    '''
+    dynamicly link a paramwhen algo is instanciated
+    '''
+    
     if 'opts_r' in dir(algo): v_r = algo.opts_r
     else : v_r={}
     dict = algo.opts
@@ -26,15 +73,12 @@ def linkparams(algo):
     else : print 'no opts to link for : '+str(algo)
 
 
-
-
-def update(dictin):
-    dictin = getNamespace(dictin["name"])    
-  
-  
   
     
 def setparams(dictin,rangedict={}):
+    '''
+    register all values from opts dict
+    '''
     name = dictin['name']
     if not name in params.descriptorNames():
         global params
@@ -45,7 +89,7 @@ def setparams(dictin,rangedict={}):
                 for s in val:
                     params.add(name+'.'+x,s)
                 
-                '''adding dict'''
+                '''adding dict (TODO recursive method)'''
             elif isinstance(val,dict): 
                 for s,v in val.iteritems():
                     if isinstance(v,dict) :
@@ -66,8 +110,13 @@ def setparams(dictin,rangedict={}):
     
     
 def getNamespace(name):
+    '''
+    get dictionary according to the asked namespace
+    '''
     global params
-    res = dict(('.'.join(x.split('.')[1:]),params[x]) for x in params.descriptorNames())
+    print params.descriptorNames()
+    res = dict(('.'.join(x.split('.')[1:]),params[x]) for x in params.descriptorNames(name))
+    if not res : print "no namespace for "+name
     return res
     
 
@@ -84,13 +133,17 @@ def saveconfrange(fn):
     global ranges
     YamlOutput(filename = fn)(ranges)
 
-
+def loadconfrange(fn):
+    global ranges
+    ranges = YamlOutput(filename = fn)()
 
 def loadconf(fn):
     global params
     params = YamlInput(filename = fn)()
-    
-# curHead = 'lala.'
-# setparams("lolo",5)
-# print params.descriptorNames()
-# print getNamespace("lala")
+    setConfig()
+
+
+if __name__ == '__main__':
+    crawlParams()
+    saveconf(conf.ODBStats +'tst.conf')
+    saveconfrange(conf.ODBStats + 'tst.range.conf')

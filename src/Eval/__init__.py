@@ -32,13 +32,13 @@ def eval(predGt):
 
 
 
-def plot(fn):
+def plot(fn,meas):
     plt.subplot(211)
     
     
     
     if pool.readPool(fn):
-        plt.title(pool.poolName+"/"+str({k:round(v,2) if isinstance(v,float) else v for k,v in meas[-1].iteritems()}),loc= 'left')
+        plt.title(pool.poolName+"/"+str({k:round(v,2) if isinstance(v,float) else v for k,v in meas.iteritems()}),loc= 'left')
         nl =  pool.getNames("novelty")
         for n in nl:
             curn = pool.getn(n)
@@ -92,10 +92,7 @@ def main():
     
     import time
     
-    
-    
-    
-    conf.initconf()
+
     
 
     
@@ -109,7 +106,7 @@ def main():
     for fn in pgts:
         
         meas+=[eval(pgts[fn])]
-        if conf.isPlot: plot(fn)
+        if conf.isPlot: plot(fn,meas[-1])
         i+=1
     writeStats(meas)
     meas = np.array(meas)
@@ -121,4 +118,7 @@ def main():
     
     
 if __name__ == "__main__":
+    import Utils.Configurable
+    Utils.Configurable.crawlParams()
+    
     main()

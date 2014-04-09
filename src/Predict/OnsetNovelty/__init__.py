@@ -9,21 +9,21 @@ import essOnsetFunc
 import Nsdf
 import SuperFluxOnsets
 import conf
-import Utils.Configurable as confM
+# import Utils.Configurable as confM
 
 curalgo = globals()[conf.opts["NoveltyName"]]#essOnsetFunc
 
 def loadFromConf():
     global curalgo
     curalgo = globals()[conf.opts["NoveltyName"]]#essOnsetFunc
+#     curalgo.opts = confM.getNamespace(conf.opts["NoveltyName"])
 
 
 
-
-def compute(audio,opt):
+def compute(audio):
     
     global curalgo
     
-    return curalgo.compute(audio, opt)
+    return curalgo.compute(audio)
 
 

@@ -9,6 +9,14 @@ import conf
 
 
 
+
+'''
+package made of helper functions for managing file and memory
+contains a global variable pool from in-defined poolM class to facilitate memory sharing between package (for now :novelty function, onsets prediction)
+the PoolM class allow to differenciate time stamped Events and continue framerated data" 
+''' 
+
+
 def getonsets(fn):
     f = open(fn, 'r')
     s = f.readline()
@@ -55,7 +63,7 @@ def crawlpaths():
         res = dict((os.path.splitext(x)[0],dirpath+x) for x in filenames if any(x.endswith(y) for y in ['.wav','.flac']) )
         
     if not res: 
-        print "no file found"
+        print "no audio file found in" + conf.ODBMedias
         return
 
     global curFiles

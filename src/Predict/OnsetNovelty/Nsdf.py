@@ -13,7 +13,7 @@ from essentia.standard import *
 import matplotlib.pyplot as plt
 import numpy as np 
 import scipy.signal as signal
-import Utils.Configurable as confM
+
 
 
 opts = {"name":"Nsdf","minthresh" : 0.0000001}
@@ -21,8 +21,7 @@ opts = {"name":"Nsdf","minthresh" : 0.0000001}
 
 
 
-def updateParams():
-    confM.getNamespace(opts["name"])
+
 
 
 

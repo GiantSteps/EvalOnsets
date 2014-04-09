@@ -1,53 +1,54 @@
-import Predict.Preprocess as pp
-import Predict.OnsetNovelty as oN
-import Predict.Slice as sL
-
-
+# import Predict.Preprocess as pp
+# import Predict.OnsetNovelty as oN
+# import Predict.Slice as sL
+import Predict
+import Eval
+# 
+# 
 import conf
-import Utils
-from Utils.fileMgmt import *
+# import Utils
+# from Utils.fileMgmt import *
 import Utils.Configurable as confM
 from essentia.standard import  *
 
 from essentia import *
 
-def execute(conf):
-    return 0
-    
-    
-def loadConf(fn):
-    pool = Pool()
-    pool = YamlInput(filename=fn)()
-    desc = [x.split('.')[0] for x in pool.descriptorNames()]
-    entities = set(desc)
-    entities.remove('metadata')
-    entities.remove('globalSettings')
-    glob = getNameSpace(pool,'globalSettings',False)
-    conf.opts = glob
-    conf.initconf()
-    
-    Utils.fileMgmt.init()
-    
-    oN.loadFromConf()
-    sL.loadFromConf()
-    
-    
-    confM.linkparams(conf)
-    confM.linkparams(pp)
-    confM.linkparams(oN.curalgo)
-    confM.linkparams(sL.curalgo)
-    print glob
-    for x in entities:
-        
-        
-    
-    return pool
 
 
-def saveConf():
+    
+    #for x in entities:
+        
+
+
+# def generateConfBatch(conf,range,var):
+#     confM.loadconf(conf)
+#     confM.loadconfrange(range)
+#     batchname = ''
+#     print
+#     if var in confM.ranges.descriptorNames():
+#         return 0
+#             
+            
+
+def execute(fn):
+    confM.loadconf(fn)
+    Predict.main();
+    Eval.main()
+    
+    
     return 0
+    
+
 
 
 
 if __name__ == "__main__":
-    loadConf(conf.ODBStats+"config.conf")
+    import argparse
+    
+    p = argparse.ArgumentParser(
+        formatter_class=argparse.RawDescriptionHelpFormatter, description="""
+    process onset Detections following a given configuration file
+
+    """)
+
+    execute(conf.ODBStats+"config.conf")
