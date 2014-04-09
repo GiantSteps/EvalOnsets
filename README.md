@@ -28,7 +28,7 @@ you can use last computation using pool cache (basicaly set fromFile=true in con
 Make sure to set the "src" directory as the PYTHONPATH to detect the packages.
 
 
-librairies needed:
+libraries needed:
 ------------
 
 * essentia
@@ -36,6 +36,7 @@ librairies needed:
 * sklearn
 * scypi
 * matplotlib
+* modal (https://github.com/johnglover/modal)
 
 
 optional
