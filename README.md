@@ -25,6 +25,23 @@ for computing : specify desired methods in OnsetNovelty's and Slice's \_\_init\_
 
 you can use last computation using pool cache (basicaly set fromFile=true in config.py)
 
+
+Eclipse Instructions
+---------------------------
+1. Install PyDev
+ * http://pydev.org/manual_101_install.html
+ * You may need to install Oracle Java (http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+ * Then set Java -> Installed JREs -> to Java SE 8
+ * Restart and in Preferences you should now have PyDev appearing
+  * Set Interpreters > Python Interpreter to "/usr/local/bin/python" or whatever
+2. Go to Eclipse Marketplace
+ * Install EGit
+3. Pull down code
+ * Go to File -> Import 
+ * Select "Projects from Git"
+ * Clone URI "https://github.com/GiantSteps/EvalOnsets"
+ * Import existing project to your workspace destination
+ 
 Make sure to set the "src" directory as the PYTHONPATH to detect the packages.
 
 
