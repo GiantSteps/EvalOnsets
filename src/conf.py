@@ -14,7 +14,7 @@ specific options
 fromFile = False;
 skipComputed = False;
 isPlot = True;
-onlyNRandomFiles = 0;
+onlyNRandomFiles = 1;
 
 
 '''
@@ -35,13 +35,13 @@ PathToData = '/Users/carthach/GiantSteps-Share/datasets/'
 #Martin
 #PathToData = '/Users/mhermant/Documents/Work/Datasets/'
 
-#PathToData = '/Volumes/GiantSteps-Share/datasets/'
+PathToData = '/Volumes/GiantSteps-Share/datasets/'
 # PathToData = PathToLocal
 
 opts = {   "name":"globalSettings",
                 # curdataset = ODBdirs
                 'preprocess' : ["Intensity"],
-                "curdataset" : "ODB",
+                "curdataset" : "JKU",
                 "configName" : "_default",
 
                 "NoveltyName": "essOnsetFunc",
@@ -177,3 +177,9 @@ def initconf():
 
 #When this is imported run the initconf method to set the variables    
 initconf()
+
+
+def loadFromConf():
+    import Utils.Configurable as confM
+    opts = confM.getNamespace('globalSettings')
+    initconf()
