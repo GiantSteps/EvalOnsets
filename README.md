@@ -4,11 +4,15 @@ Python packages for audio onset detection Evaluation
 
 Structure
 ---------
-* Predict : global package to generate pool and onsets text files
-* OnsetNovelty : package grouping multiple onset novelty functions
-* Slice : package grouping multiple multidimensionnal "peak-picking" algorithms
-* Eval : statistical tools for evaluating onsets prediction vs ground-truth
+In the "src" dir the tool is organised into python packages as followed:-
 
+* Eval : statistical tools for evaluating onsets prediction vs ground-truth
+* Predict : global package to generate pool and onsets text files
+	* OnsetNovelty : package grouping multiple onset novelty functions
+	* Slice : package grouping multiple multidimensional "peak-picking" algorithms
+* Utils : common routines and functions for dealing with files and the environment.
+
+conf.py at the top level holds environment specific things - customise this for your setup.
 
 
 How-To
@@ -24,7 +28,7 @@ you can use last computation using pool cache (basicaly set fromFile=true in con
 Make sure to set the "src" directory as the PYTHONPATH to detect the packages.
 
 
-librairies needed:
+libraries needed:
 ------------
 
 * essentia
@@ -32,6 +36,7 @@ librairies needed:
 * sklearn
 * scypi
 * matplotlib
+* modal (https://github.com/johnglover/modal)
 
 
 optional
