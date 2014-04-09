@@ -10,7 +10,7 @@ import essentia
 import numpy as np
 from essentia.standard import *
 
-
+opts={}
 def compute(features,opt):
     frameRate = opt['sampleRate']/opt['hopSize']
     onsets = Onsets(frameRate = frameRate)

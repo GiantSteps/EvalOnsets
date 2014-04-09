@@ -18,7 +18,7 @@ import Utils.Configurable as confM
 
 opts = {"name":"Nsdf","minthresh" : 0.0000001}
 
-confM.linkparams(globals())
+
 
 
 def updateParams():

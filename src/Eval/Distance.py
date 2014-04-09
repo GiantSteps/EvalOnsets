@@ -11,7 +11,7 @@ import numpy as np
 import conf
 
 
-def toClass(pred,tru,threshold):
+def toClass(pred,tru):
     pos = []
     mis = []
     neg = []
@@ -32,15 +32,16 @@ def toClass(pred,tru,threshold):
     return pos,mis,neg
 
 
-def preRec(pred,true,threshold):
-    
+def preRec(pred,true):
+    threshold = conf.opts['doubleOnsetT']
     pos,mis,neg = toClass(pred,true,threshold)
     print pos,mis,neg
     pre = len(pos)*1./(len(pos)+len(neg))
     recall = len(pos)*1./(len(pos)+len(mis))
     return pre,recall
 
-def toBinPT(pred,tru,threshold,isBin=False):
+def toBinPT(pred,tru,isBin=False):
+    threshold = conf.opts['doubleOnsetT']
     res=[]
     trub=[]
     endi = endj= False
@@ -81,11 +82,11 @@ def toBinPT(pred,tru,threshold,isBin=False):
 
             
             
-def analyze(pred,t,threshold):
+def analyze(pred,t):
         
         
 
-        predb,tb =  toBinPT(pred,t,2,True)
+        predb,tb =  toBinPT(pred,t,True)
         
         
         if conf.isPlot : plot(t,pred,tb,predb)
@@ -94,9 +95,15 @@ def analyze(pred,t,threshold):
 #         return np.mean(tb-predb);
         pre,rec,f,dumb = precision_recall_fscore_support(tb,predb)
         
-        return {"f-measure": f[1],
-                "precision": pre[1],
-                "recall":rec[1]
+        classtrue = 1
+        if len(f) < 2:
+            if predb[0]==1:
+                classtrue = 0
+            else :
+                print"what?"
+        return {"f-measure": f[classtrue],
+                "precision": pre[classtrue],
+                "recall":rec[classtrue]
                 
                 }       
         
@@ -105,15 +112,15 @@ def plot(t,p,tb,pb):
     
     plt.scatter([x for x in range(len(tb))],tb,marker = "o",s=200/1,c="red")
     plt.scatter([x for x in range(len(pb))],pb,marker = "o",s=200/2,c="blue")
-    xm,xmm  = plt.xlim()
-    plt.xlim(0,xmm)
+    
+    plt.xlim(0,plt.xlim()[1])
     
     plt.subplot(212)
 
     plt.scatter(t,[1 for x in range(len(t))],c="red",marker = "^",s=100)
     plt.scatter(p,[0 for x in range(len(p))],c="blue",marker = "^",s=100)
-    xm,xmm  = plt.xlim()
-    plt.xlim(0,xmm)
+    
+    plt.xlim(0,plt.xlim()[1])
             
 # def distEMD(a,p):
 #     cv.calc
@@ -133,4 +140,4 @@ def plot(t,p,tb,pb):
 if __name__ == "__main__":  
     pred=[1,3, 6,6.1,6.4,8, 9]
     t=[0, 2,5,6,10]
-    print analyze(pred,t,2)
+    print analyze(pred,t)

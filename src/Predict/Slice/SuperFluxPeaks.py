@@ -51,6 +51,8 @@ from scipy.ndimage.filters import (maximum_filter, maximum_filter1d,
                                    uniform_filter1d)
 
 
+
+opts={}
 class Filter(object):
     """
     Filter Class.

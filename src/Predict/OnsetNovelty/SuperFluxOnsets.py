@@ -50,6 +50,8 @@ from scipy.io import wavfile
 from scipy.ndimage.filters import (maximum_filter, maximum_filter1d,
                                    uniform_filter1d)
 
+SELF_AUDIO = True
+opts = {}
 
 class Filter(object):
     """
@@ -542,7 +544,7 @@ class Onset(object):
         self.activations = np.fromfile(filename, sep=sep)
 
 
-def parser():
+def parser(path):
     """
     Parses the command line arguments.
 
@@ -577,7 +579,7 @@ def parser():
                    default=True, help='operate in offline mode')
     # wav options
     wav = p.add_argument_group('audio arguments')
-    wav.add_argument('--norm', action='store_true', default=None,
+    wav.add_argument('--norm', action='store_true', default=True,
                      help='normalize the audio (switches to offline mode)')
     wav.add_argument('--att', action='store', type=float, default=None,
                      help='attenuate the audio by ATT dB')
@@ -650,7 +652,7 @@ def parser():
     p.add_argument('--version', action='version',
                    version='%(prog)spec 1.01 (2014-03-30)')
     # parse arguments
-    args = p.parse_args()
+    args = p.parse_args(['files',path])
     # print arguments
     if args.verbose:
         print args
@@ -658,7 +660,7 @@ def parser():
     return args
 
 
-def main():
+def main(path):
     """
     Main program.
 
@@ -667,7 +669,7 @@ def main():
     import glob
     import fnmatch
     # parse arguments
-    args = parser()
+    args = parser(path)
     # determine the files to process
     files = []
     for f in args.files:
@@ -723,6 +725,8 @@ def main():
             sodf = SpectralODF(s, args.ratio, args.max_bins, args.diff_frames)
             # perform detection function on the object
             act = sodf.superflux()
+            return act
+            
             # create an Onset object with the activations
             o = Onset(act, args.fps, args.online)
             if args.save:
@@ -804,3 +808,13 @@ def compute(audio, options):
     act = sodf.superflux()
 
     return act
+
+
+if __name__ == "__main__":
+    import matplotlib.pyplot as plt
+    superf = main('/Users/mhermant/Documents/Work/Datasets/ODB/sounds/2-uncle_mean.wav')
+    print superf
+    
+    plt.plot(superf)
+    plt.show()
+    

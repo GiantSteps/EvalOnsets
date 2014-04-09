@@ -142,7 +142,7 @@ def writeStats(l):
 
 
 class PoolM:
-    def initPool(self):
+    def __init__(self):
         self.pool = Pool()
         self.poolHead = ""
         self.curOpt =conf.opts
@@ -153,13 +153,16 @@ class PoolM:
     def readPool(self,fn=""):
         if fn : self.poolName=fn
         self.poolPath = self.poolDir+fn+".pool"
-        self.pool=YamlInput(filename = self.poolPath)()
+        if os.path.exists(self.poolPath):
+            self.pool=YamlInput(filename = self.poolPath)()
+            return True
+        else : 
+            print "pool not loaded"
+            return False
         
     def setPool(self,fn,opt={}):
         self.pool.clear()
         self.poolDir =conf.ODBPool
-        
-        
         self.poolName = fn
         self.poolPath = self.poolDir+fn+".pool"
         if opt : self.curOpt=opt
@@ -216,14 +219,15 @@ instanciate pool manager
 crawl among audio file paths following configuration file
 '''
 pool = PoolM()
-    
+   
 curFiles = {}
+
 crawlpaths()
 
 
 def init():
     global pool
-    pool.initPool()
+    pool = PoolM()
     crawlpaths()
 
 

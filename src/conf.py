@@ -13,7 +13,7 @@ specific options
 
 fromFile = False;
 skipComputed = False;
-isPlot = False;
+isPlot = True;
 onlyNRandomFiles = 0;
 
 
@@ -27,17 +27,20 @@ merged into one dict for configuration management
 
 opts = {   "name":"globalSettings",
                 # curdataset = ODBdirs
+                'preprocess' : ["Intensity"],
                 "curdataset" : "ODB",
                 "configName" : "_default",
 
-                "NoveltyName": "Nsdf",
-                "SliceName" : "EssentiaOnsets",
+                "NoveltyName": "essOnsetFunc",
+                "SliceName" : "EssentiaPeaks",
 
                 "sampleRate":44100,
                 "frameSize":512,
                 "hopSize":512,
                 "zeroPadding":0,
-                "windowType":"hann"
+                "windowType":"hann",
+                
+                "doubleOnsetT" : 0.8
                 }
 '''
 file Options
@@ -67,14 +70,14 @@ dirlist = {
 
 
 dir = os.path.dirname(__file__)
-PathToLocal = os.path.realpath('../cache/')#os.path.join(dir, '../cache')
-PathToLocal+='/'
+PathToLocal = ''.join(dir.split('/src')[:-1])+'/cache/'
+
 # print PathToLocal
 
 
 
 PathToData = '/Users/mhermant/Documents/Work/Datasets/'
-# PathToData = '/Volumes/GiantSteps-Share/datasets/'
+#PathToData = '/Volumes/GiantSteps-Share/datasets/'
 # PathToData = PathToLocal
 
 
@@ -119,8 +122,8 @@ def updateconf():
     
 
 def initconf():
-    import Utils.Configurable as confM
-    confM.linkparams(globals())
+    
+    
     
     
     
@@ -131,6 +134,7 @@ def initconf():
     ODBPredicted = PathToLocal+opts['curdataset']+"/"+opts['configName']+'/predicted/'
     ODBStats = PathToLocal+opts['curdataset']+"/"+opts['configName']+'/stats/'
     
+    print ODBPredicted
     if not os.path.exists(ODBPool):
         os.makedirs(ODBPool)
     if not os.path.exists(ODBPredicted):

@@ -5,9 +5,10 @@ from essentia import INFO
 import essentia
 from essentia.progress import Progress
 from essentia.standard import *
+import numpy as np
 
 
-
+opts={}
 
     
 def compute(audio, options):
@@ -59,7 +60,7 @@ def compute(audio, options):
     res = [[x/maxhfc for x in hfc]]
     res +=[complex]
    
-    return res
+    return np.array(res)
 
 
 
