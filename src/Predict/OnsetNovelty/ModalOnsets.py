@@ -6,11 +6,13 @@ import modal
 import modal.onsetdetection as od
 import modal.ui.plot as trplot
 
+#Need to have this for some reason
+opts = {}
 
-
+SELF_AUDIO = True
 
 #Load wav file and create the onset detection function      
-def compute(audio, options):
+def compute(audio):
     file_name = audio
     sampling_rate, audio = wavfile.read(file_name)
     audio = np.asarray(audio, dtype=np.double)
@@ -26,8 +28,6 @@ def compute(audio, options):
     odf_values = np.zeros(len(audio) / hop_size, dtype=np.double)
     odf.process(audio, odf_values)
     
-    onset_det = od.OnsetDetection()
-    
-    return onset_det
+    return odf_values
     
     
