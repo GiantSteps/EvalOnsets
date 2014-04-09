@@ -49,26 +49,45 @@ def toBinPT(pred,tru,isBin=False):
     j = 0;
     while (not endj or not endi):
         if (not endj and not endi):
+            
             if(abs(pred[i]-tru[j])<threshold):
+                '''
+                true positive
+                '''
                 if isBin :res+=[1]
                 else:res+=[1-abs(pred[i]-tru[j])/threshold]
                 trub+=[1]
                 i+=1;
                 j+=1;
+                
+            
             elif pred[i]< tru[j]:
+                '''
+                false positive
+                '''
                 i+=1
                 trub+=[0]
                 res+=[1]
+            
             else :
+                '''
+                false negative
+                '''
                 j+=1
                 res+=[0]
                 trub+=[1]
         else :
             if endj :
+                '''
+                false positive
+                '''
                 res+=[1]
                 trub+=[0]
                 i+=1
             if endi:
+                '''
+                false negative
+                '''
                 res+=[0]
                 trub+=[1]
                 j+=1
