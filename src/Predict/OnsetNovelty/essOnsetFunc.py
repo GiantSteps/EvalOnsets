@@ -8,7 +8,8 @@ from essentia.standard import *
 import numpy as np
 
 
-opts={}
+opts={'name' : 'essOnsetFunc',
+      'lala':2}
 
     
 def compute(audio, options):

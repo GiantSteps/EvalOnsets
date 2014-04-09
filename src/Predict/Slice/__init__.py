@@ -8,6 +8,11 @@ import conf
 
 curalgo = globals()[conf.opts["SliceName"]]#cwt
 
+
+def loadFromConf():
+    global curalgo
+    curalgo = globals()[conf.opts["SliceName"]]
+
 def compute(features,opt):
     global curalgo
     return curalgo.compute(features, opt)

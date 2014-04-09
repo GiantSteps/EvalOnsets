@@ -60,7 +60,7 @@ def compute(path):
 
 def computeAll():
     fns = crawlpaths()
-    confM.saveconf(conf.ODBStats+"/config.conf") 
+    
     for fn in fns:
         
         path = fns[fn]
@@ -78,11 +78,11 @@ def computeAll():
     print "---------endcomputation--------"
     
 
-if __name__=="__main__":
+def main():
     import sys
     import cStringIO
     import argparse
-    #import Utils
+    import Utils
     import Utils.Configurable as confM
     # define parser
 #     p = argparse.ArgumentParser(
@@ -104,12 +104,16 @@ if __name__=="__main__":
     
     confM.linkparams(conf)
     
-    pp.registerparams()
+    confM.linkparams(pp)
     confM.linkparams(oN.curalgo)
     confM.linkparams(sl.curalgo)
     
     print confM.params.descriptorNames()
+    confM.saveconf(conf.ODBStats+"/config.conf") 
     computeAll()
+  
 
+if __name__=="__main__":
     
+    main()
 

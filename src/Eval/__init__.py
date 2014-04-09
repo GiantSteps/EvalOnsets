@@ -76,11 +76,20 @@ def plotstats(meas):
     plt.tight_layout();
     plt.savefig(conf.ODBStats+"stats.png")
     plt.show()
+     
+     
+     
+     
+     
+     
+     
+     
+     
             
+def main():
     
     
     
-if __name__ == "__main__":
     import time
     
     
@@ -108,4 +117,8 @@ if __name__ == "__main__":
     print meas
     # print np.mean(meas)
     
-    print "execution time : "+str(time.clock()-exectime)
+    print "execution time : "+str(time.clock()-exectime)  
+    
+    
+if __name__ == "__main__":
+    main()

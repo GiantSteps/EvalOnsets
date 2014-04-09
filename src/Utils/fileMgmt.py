@@ -110,7 +110,12 @@ def isInPool(fn):
     return res
  
  
-   
+def getNameSpace(poolin,ns,absolute = True):
+    l = poolin.descriptorNames(ns)
+    if absolute : 
+        return dict((x,poolin[x]) for x in l)
+    else : 
+        return dict(('.'.join(x.split('.')[1:]),poolin[x]) for x in l)    
 
 
 
@@ -187,6 +192,7 @@ class PoolM:
         self.poolHead = nm+"."
      
     
+    
     def add(self,name,data):
         self.pool.set(self.poolHead+name+".frameRate",self.curOpt["sampleRate"]*1./self.curOpt["hopSize"])
         self.pool.add(self.poolHead+name+".data",data)
@@ -202,7 +208,10 @@ class PoolM:
     def setEvt(self,name,data,opt={}):
         self.pool.set(self.poolHead+name+".frameRate",0)
         self.pool.set(self.poolHead+name+".data",data)
-        
+    
+
+    
+       
     def getn(self,name,fR=False):
         if fR : return self.pool[name+".frameRate"]
         return self.pool[name+".data"]

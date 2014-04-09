@@ -14,7 +14,7 @@ specific options
 fromFile = False;
 skipComputed = False;
 isPlot = True;
-onlyNRandomFiles = 0;
+onlyNRandomFiles = 1;
 
 
 '''
@@ -28,7 +28,7 @@ merged into one dict for configuration management
 opts = {   "name":"globalSettings",
                 # curdataset = ODBdirs
                 'preprocess' : ["Intensity"],
-                "curdataset" : "ODB",
+                "curdataset" : "JKU",
                 "configName" : "_default",
 
                 "NoveltyName": "essOnsetFunc",
@@ -76,8 +76,8 @@ PathToLocal = ''.join(dir.split('/src')[:-1])+'/cache/'
 
 
 
-PathToData = '/Users/mhermant/Documents/Work/Datasets/'
-#PathToData = '/Volumes/GiantSteps-Share/datasets/'
+#PathToData = '/Users/mhermant/Documents/Work/Datasets/'
+PathToData = '/Volumes/GiantSteps-Share/datasets/'
 # PathToData = PathToLocal
 
 

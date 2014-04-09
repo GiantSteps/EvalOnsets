@@ -11,9 +11,11 @@ import SuperFluxOnsets
 import conf
 import Utils.Configurable as confM
 
-
-
 curalgo = globals()[conf.opts["NoveltyName"]]#essOnsetFunc
+
+def loadFromConf():
+    global curalgo
+    curalgo = globals()[conf.opts["NoveltyName"]]#essOnsetFunc
 
 
 
