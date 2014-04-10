@@ -27,6 +27,7 @@ opts = {"name":"Nsdf","minthresh" : 0.0000001}
 
 
 def compute(audio):
+    audio = essentia.array(audio)
     sampleRate  = int(conf.opts['sampleRate'])
     frameSize   = int(conf.opts['frameSize'])
     hopSize     = int(conf.opts['hopSize'])

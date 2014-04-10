@@ -14,7 +14,7 @@ specific options
 fromFile = False;
 skipComputed = False;
 isPlot = True;
-onlyNRandomFiles = 1;
+onlyNRandomFiles = 0;
 
 
 '''
@@ -53,7 +53,7 @@ opts = {   "name":"globalSettings",
                 "zeroPadding":0,
                 "windowType":"hann",
                 
-                "doubleOnsetT" : 0.8
+                "doubleOnsetT" : 0.1
                 }
 '''
 file Options

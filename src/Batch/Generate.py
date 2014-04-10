@@ -29,6 +29,7 @@ def generateConfBatch(var={},name='default',output = '',confin=''):
     
     varNames = sorted(var)
     combinations = [dict(zip(varNames, prod)) for prod in it.product(*(var[varName] for varName in varNames))]
+    
     if any(v not in confM.params.descriptorNames() for v in var.iterkeys()): return 0
     
     init = confM.getDict(var)
@@ -52,9 +53,9 @@ def dictToStr(d):
 if __name__=="__main__":
 
     
-    var   = {'globalSettings.NoveltyName':['Nsdf','SuperFluxOnsets','essOnsetFunc','ModalOnsets'],'globalSettings.SliceName':['EssentiaPeaks','SuperFluxPeaks','ModalPeaks'], 'globalSettings.frameSize':[512,1024,2056]}
+    var   = {'globalSettings.NoveltyName':['SuperFluxOnsets','essOnsetFunc','ModalOnsets'],'globalSettings.SliceName':['EssentiaPeaks','SuperFluxPeaks','ModalPeaks'], 'globalSettings.frameSize':[512,1024,2056]}
     
-    generateConfBatch(var,'reduced_1JKU')
+    generateConfBatch(var,'JKU')
     
     
     

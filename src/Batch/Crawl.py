@@ -27,10 +27,14 @@ def getnBests(num,di):
     return res
 
         
-    
+def main():
+    stats = getResults(conf.PathToLocal)
+    res = getnBests(15,stats)
+    f = open(conf.PathToLocal+'bestRes.txt','w')
+    f.write(str(res))
+    f.close()    
 
 if __name__=="__main__":
     
-    stats = getResults(conf.PathToLocal)
-    print getnBests(3,stats)
+    main()
     

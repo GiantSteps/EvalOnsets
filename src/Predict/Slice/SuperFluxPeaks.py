@@ -493,6 +493,7 @@ class Onset(object):
                                    mode='constant', origin=avg_origin)
         # detections are activation equal to the maximum
         detections = self.activations * (self.activations == mov_max)
+        
         # detections must be greater or equal than the mov. average + threshold
         detections = detections * (detections >= mov_avg + threshold)
         # convert detected onsets to a list of timestamps

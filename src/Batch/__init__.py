@@ -1,4 +1,5 @@
 import os
+import Crawl
 # trick to import modules when launching from command line
 if __name__ == "__main__":
     import sys, inspect
@@ -50,7 +51,7 @@ def batch(fn):
     import time
     
     processes = set()
-    max_processes = 1
+    max_processes = 8
 
         
     dir = os.path.realpath(os.path.abspath(os.path.split(inspect.getfile( inspect.currentframe() ))[0]))+"/__init__.py"
@@ -70,8 +71,9 @@ def batch(fn):
         while len(processes) >= max_processes:
             os.wait()
             processes.difference_update([p for p in processes if p.poll() is not None])
-            
-         
+          
+    while len(processes) >0 :
+        True    
 #         
 
 
@@ -93,14 +95,15 @@ if __name__ == "__main__":
                help='foldername ')
     
     tststr = '-fi /Users/mhermant/Documents/Work/Dev/Eclipse/Evaluation/cache/Batch/reduced_1JKU/NoveltyName.essOnsetFunc_frameSize.1024_SliceName.SuperFluxPeaks.conf'.split(' ')
-    args = p.parse_args(tststr)
+    args = p.parse_args()
 
     if args.filename : 
         execute(args.filename)
     else :
         if not args.folder:
-            args.folder = conf.PathToLocal+'Batch/reduced_1JKU'
+            args.folder = conf.PathToLocal+'Batch/JKU'
         batch(args.folder)
+        Crawl.main()
 
     
         
