@@ -103,7 +103,12 @@ def toBinPT(pred,tru,isBin=False):
             
 def analyze(pred,t):
         
-        
+        if not pred :
+            print "found empty pred for analysing" 
+            return 0
+        if not t :
+            print "found empty groundtrouth for analysing" 
+            return 0
 
         predb,tb =  toBinPT(pred,t,True)
         

@@ -13,7 +13,8 @@ opts = {}
 def compute(features, opt):
 
     onset_det = od.OnsetDetection()
-
+    if(isinstance(features[0],list) or isinstance(features[0],np.ndarray)):
+        features = features[0]
     onset_det.peak_size = 3
     onsets = onset_det.find_onsets(features) * conf.opts["hopSize"]
     

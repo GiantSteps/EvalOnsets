@@ -46,7 +46,7 @@ def getGt(fn):
         f.close()
         return res
     else:
-        print fn+" not found"
+        print fn+" groundtruth file not found"
     
 
 def crawlpaths():
@@ -87,7 +87,7 @@ def getPred(fn):
         f.close()
         return res
     else:
-        print fn+" not found"
+        print fn+" Prediction file not found"
     
     
 def crawlpgt():
@@ -96,7 +96,7 @@ def crawlpgt():
     res = {}
     for x in gts:
         if x in preds.keys():
-            res[x]=[gts[x],preds[x]]
+            res[x]=[preds[x],gts[x]]
         else:
             print "groundtruth not found for : "+x.key
     return res

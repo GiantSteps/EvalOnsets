@@ -50,7 +50,7 @@ from scipy.io import wavfile
 from scipy.ndimage.filters import (maximum_filter, maximum_filter1d,
                                    uniform_filter1d)
 
-
+import conf
 
 opts={}
 class Filter(object):
@@ -745,11 +745,11 @@ def main():
 def staticArgs(options):
     class args: pass
     
-    args.samplerate = options['sampleRate']
+    args.samplerate = int(conf.opts['sampleRate'])
     
     args.norm = ''
     args.fps = 200
-    args.frame_size = 2048
+    args.frame_size = int(conf.opts['frameSize'])#2048
     args.ratio = 0.5
     args.max_bins = 3
     args.log = None
@@ -774,7 +774,8 @@ def staticArgs(options):
 def compute(features,opt):
     
     args = staticArgs(opt) 
-
+    if(isinstance(features[0],list) or isinstance(features[0],np.ndarray)):
+        features = features[0]
     o = Onset(features, args.fps, args.online)
         
     o.detect(args.threshold, args.combine, args.pre_avg, args.pre_max, args.post_avg, args.post_max, args.delay)

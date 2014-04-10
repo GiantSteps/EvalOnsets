@@ -98,7 +98,7 @@ def main():
     
     exectime = time.clock()
     
-    crawlpaths()
+    
     pgts = crawlpgt()
 
     meas=[]
@@ -120,5 +120,5 @@ def main():
 if __name__ == "__main__":
     import Utils.Configurable
     Utils.Configurable.crawlParams()
-    
+    crawlpaths()
     main()

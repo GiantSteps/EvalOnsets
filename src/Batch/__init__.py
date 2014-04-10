@@ -50,7 +50,7 @@ def batch(fn):
     import time
     
     processes = set()
-    max_processes = 5
+    max_processes = 1
 
         
     dir = os.path.realpath(os.path.abspath(os.path.split(inspect.getfile( inspect.currentframe() ))[0]))+"/__init__.py"
@@ -92,8 +92,8 @@ if __name__ == "__main__":
     p.add_argument('-fo', dest='folder', action='store',default='',
                help='foldername ')
     
-    tststr = '-fi /Users/mhermant/Documents/Work/Dev/Eclipse/Evaluation/cache/Batch/default/globalSettings.sampleRate44100.conf'.split(' ')
-    args = p.parse_args()
+    tststr = '-fi /Users/mhermant/Documents/Work/Dev/Eclipse/Evaluation/cache/Batch/reduced_1JKU/NoveltyName.essOnsetFunc_frameSize.1024_SliceName.SuperFluxPeaks.conf'.split(' ')
+    args = p.parse_args(tststr)
 
     if args.filename : 
         execute(args.filename)

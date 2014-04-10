@@ -748,11 +748,11 @@ def main(path):
 def staticArgs(options):
     class args: pass
     
-    args.samplerate = options['sampleRate']
+    args.samplerate = int(options['sampleRate'])
     
     args.norm = ''
     args.fps = 200
-    args.frame_size = options['frameSize']#2048
+    args.frame_size = int(options['frameSize'])#2048
     args.ratio = 0.5
     args.max_bins = 3
     args.log = None

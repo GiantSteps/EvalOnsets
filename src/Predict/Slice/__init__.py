@@ -3,6 +3,7 @@
 import cwt
 from Predict.Slice import EssentiaPeaks
 import SuperFluxPeaks
+import ModalPeaks
 import conf
 
 
@@ -15,7 +16,7 @@ def loadFromConf():
 
 def compute(features,opt):
     global curalgo
-    return curalgo.compute(features, opt)
+    return curalgo.compute(features, conf.opts)
 
 def getName():
     return curalgo.name

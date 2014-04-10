@@ -27,10 +27,10 @@ opts = {"name":"Nsdf","minthresh" : 0.0000001}
 
 
 def compute(audio):
-    sampleRate  = conf.opts['sampleRate']
-    frameSize   = conf.opts['frameSize']
-    hopSize     = conf.opts['hopSize']
-    zeroPadding = conf.opts['zeroPadding']
+    sampleRate  = int(conf.opts['sampleRate'])
+    frameSize   = int(conf.opts['frameSize'])
+    hopSize     = int(conf.opts['hopSize'])
+    zeroPadding = int(conf.opts['zeroPadding'])
     windowType  = conf.opts['windowType']
 
     frameRate = float(sampleRate)/float(hopSize)
