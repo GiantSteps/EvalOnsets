@@ -2,7 +2,7 @@ import Predict
 import Eval
 import os
 import conf
-
+import itertools as it
 import Utils.Configurable as confM
 import numpy as np
 
@@ -24,23 +24,36 @@ def generateConfBatch(var={},name='default',output = '',confin=''):
     if not os.path.exists(output):
         os.makedirs(output)     
     
+
     print confM.params.descriptorNames()
-    for n,v in var.iteritems():
-        if n in confM.params.descriptorNames():
-            init = confM.params[n]
-            for val in v:
-                curname =str(n)+str(val)
-                confM.params.set(n,val)
-                confM.params.set("globalSettings.configName",curname)
-                confM.saveconf(output+curname+".conf")
-                print "write conf :" +output+curname+".conf"
-            confM.params.set(n,init)
     
+    varNames = sorted(var)
+    combinations = [dict(zip(varNames, prod)) for prod in it.product(*(var[varName] for varName in varNames))]
+    if any(v not in confM.params.descriptorNames() for v in var.iterkeys()): return 0
     
+    init = confM.getDict(var)
+    for curd in combinations:
+        curname =dictToStr(curd)
+        confM.setDict(curd)
+        confM.params.set("globalSettings.configName",curname)
+        confM.saveconf(output+curname+".conf")
+        print "write conf :" +output+curname+".conf"
+    
+    confM.setDict(init)
+    
+
+def dictToStr(d):
+    res = ''
+    for n,v in d.iteritems():
+        res+= str(n.split('.')[-1])+'.'+str(v)+'_'
+    res = res[:-1]
+    return res
+ 
 if __name__=="__main__":
 
     
-    var   = {'globalSettings.sampleRate':[44100,22050]}
+    var   = {'globalSettings.sampleRate':[44100,22050], 'globalSettings.frameSize':[512,1024,2056]}
+    
     generateConfBatch(var)
     
     

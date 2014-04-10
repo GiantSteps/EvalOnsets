@@ -149,8 +149,18 @@ def writeStats(l):
                   "average precision : "+str(precavg)+"\n"
                   ])
     f.close()
-    
 
+
+def getStats(fn):
+    res = {}    
+    f=open(fn,'r')
+    cs = f.readlines()
+    for s in cs:
+        res[str(s.split(':')[0])]=float(s.split(':')[1])
+    
+    
+    f.close()
+    return res
 
 
 

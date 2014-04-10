@@ -133,7 +133,15 @@ def getNamespace(name,isDict = False):
     return res
     
 
-
+def setDict(di):
+    for k,v in di.iteritems():
+        params.set(k,v)
+        
+def getDict(di):
+    res = {}
+    for k in di.iterkeys():
+            res[k] = params[k]
+    return res
 
     
 def saveconf(fn):

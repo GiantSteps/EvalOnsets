@@ -2,13 +2,16 @@ import sys
 import numpy as np
 import scipy.io.wavfile as wavfile
 import matplotlib.pyplot as plt
-import modal
+from modal import * 
 import modal.onsetdetection as od
 import modal.ui.plot as trplot
 import conf
 
 #Need to have this for some reason
-opts = {}
+opts = {
+        "name" : "ModalOnsets",
+        "algoName" : "ComplexODF"
+        }
 
 
 #Load wav file and create the onset detection function      
@@ -20,8 +23,9 @@ def compute(audio):
     sampling_rate = int(conf.opts["sampleRate"])
     frame_size = int(conf.opts["frameSize"])#2048
     hop_size = int(conf.opts["hopSize"])#512
-    
-    odf = modal.ComplexODF()
+
+   
+    odf = globals()[opts["algoName"]]()# modal.ComplexODF()
     odf.set_hop_size(hop_size)
     odf.set_frame_size(frame_size)
     odf.set_sampling_rate(sampling_rate)
