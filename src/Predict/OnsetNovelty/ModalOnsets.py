@@ -17,9 +17,9 @@ def compute(audio):
 #    sampling_rate, audio = wavfile.read(file_name)
 #    audio = np.asarray(audio, dtype=np.double)
 #    audio /= np.max(audio)
-    sampling_rate = conf.opts["sampleRate"]
-    frame_size = conf.opts["frameSize"]#2048
-    hop_size = conf.opts["hopSize"]#512
+    sampling_rate = int(conf.opts["sampleRate"])
+    frame_size = int(conf.opts["frameSize"])#2048
+    hop_size = int(conf.opts["hopSize"])#512
     
     odf = modal.ComplexODF()
     odf.set_hop_size(hop_size)

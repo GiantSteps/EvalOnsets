@@ -55,29 +55,29 @@ def batch(fn):
         
     dir = os.path.realpath(os.path.abspath(os.path.split(inspect.getfile( inspect.currentframe() ))[0]))+"/__init__.py"
 #     print dir
+    confs = []
     
     for (dirpath, dirnames, filenames) in os.walk(fn):
-        confs = [dirpath+x for x in filenames if '.conf' in x]
-        for n in confs:
-            processes.add(subprocess.Popen(['python',dir, '-fi',n]))
-        if len(processes) >= max_processes:
-            os.wait()
-            processes.difference_update([
-                p for p in processes if p.poll() is not None])
+        confs += [dirpath+"/"+x for x in filenames if '.conf' in x]
+    
+    print "batching :"+str(len(confs))+ " files from : " + fn
+    print "named : "
+    for x in confs :  print x
+    yn = raw_input("type y for validate") 
+    if not yn=="y" : return 0
+    for n in confs:
+        processes.add(subprocess.Popen(['python',dir, '-fi',n]))
+    if len(processes) >= max_processes:
+        os.wait()
+        processes.difference_update([
+            p for p in processes if p.poll() is not None])
             
-        break 
+         
 #         
 
 
 if __name__ == "__main__":
 
-    
-#     import argparse
-
-        
-        
-        
-    
 
     import argparse
     p = argparse.ArgumentParser(
@@ -93,14 +93,14 @@ if __name__ == "__main__":
     p.add_argument('-fo', dest='folder', action='store',default='',
                help='foldername ')
     
-     
+    tststr = '-fi /Users/mhermant/Documents/Work/Dev/Eclipse/Evaluation/cache/Batch/default/globalSettings.sampleRate44100.conf'.split(' ')
     args = p.parse_args()
 
     if args.filename : 
         execute(args.filename)
     else :
         if not args.folder:
-            args.folder = conf.ODBStats
+            args.folder = conf.PathToLocal+'Batch'
         batch(args.folder)
 
     

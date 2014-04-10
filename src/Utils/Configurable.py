@@ -55,7 +55,7 @@ def setConfig():
 
     Utils.fileMgmt.init()
         
-    pp.opts['algo'] = getNamespace
+    pp.opts['algo'] = getNamespace('preprocess.algo',True)
     oN.loadFromConf()
     sL.loadFromConf()
     
@@ -102,7 +102,9 @@ def setparams(dictin,rangedict={}):
                         params.set(name+'.'+x+'.'+s,v)
                     
                 '''normal'''
-            else : params.set(name+'.'+x,val)
+            else :
+                print x + " " + str(val) 
+                params.set(name+'.'+x,val)
         
         for x,val in rangedict.iteritems():
             ranges.set(name+'.'+x,val)
@@ -112,14 +114,22 @@ def setparams(dictin,rangedict={}):
     
     
     
-def getNamespace(name):
+def getNamespace(name,isDict = False):
     '''
     get dictionary according to the asked namespace
     '''
     global params
-    print params.descriptorNames()
-    res = dict(('.'.join(x.split('.')[1:]),params[x]) for x in params.descriptorNames(name))
+    print params.descriptorNames(name)
+    prune = len(name.split('.'))
+    res = dict(('.'.join(x.split('.')[prune:]),params[x]) for x in params.descriptorNames(name))
     if not res : print "no namespace for "+name
+    if isDict:
+        prune+=1
+        ent = set([x.split(".")[0] for x in res.keys()])
+        res2 = {}
+        for g in ent :
+            res2[g] =  dict(('.'.join(x.split('.')[prune:]),params[x]) for x in params.descriptorNames(name+'.'+g))
+        res = res2         
     return res
     
 
