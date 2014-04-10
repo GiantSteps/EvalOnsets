@@ -13,7 +13,7 @@ from essentia.standard import *
 import matplotlib.pyplot as plt
 import numpy as np 
 import scipy.signal as signal
-
+import conf
 
 
 opts = {"name":"Nsdf","minthresh" : 0.0000001}
@@ -26,12 +26,12 @@ opts = {"name":"Nsdf","minthresh" : 0.0000001}
 
 
 
-def compute(audio,options):
-    sampleRate  = options['sampleRate']
-    frameSize   = options['frameSize']
-    hopSize     = options['hopSize']
-    zeroPadding = options['zeroPadding']
-    windowType  = options['windowType']
+def compute(audio):
+    sampleRate  = conf.opts['sampleRate']
+    frameSize   = conf.opts['frameSize']
+    hopSize     = conf.opts['hopSize']
+    zeroPadding = conf.opts['zeroPadding']
+    windowType  = conf.opts['windowType']
 
     frameRate = float(sampleRate)/float(hopSize)
 

@@ -14,7 +14,7 @@ specific options
 fromFile = False;
 skipComputed = False;
 isPlot = True;
-onlyNRandomFiles = 0;
+onlyNRandomFiles = 1;
 
 
 '''
@@ -35,16 +35,16 @@ PathToData = '/Users/carthach/GiantSteps-Share/datasets/'
 #Martin
 PathToData = '/Users/mhermant/Documents/Work/Datasets/'
 
-#PathToData = '/Volumes/GiantSteps-Share/datasets/'
+PathToData = '/Volumes/GiantSteps-Share/datasets/'
 # PathToData = PathToLocal
 
 opts = {   "name":"globalSettings",
                 # curdataset = ODBdirs
                 'preprocess' : ["Intensity"],
-                "curdataset" : "ODB",
+                "curdataset" : "JKU",
                 "configName" : "_default",
 
-                "NoveltyName": "ModalOnsets",
+                "NoveltyName": "SuperFluxOnsets",
                 "SliceName" : "EssentiaPeaks",
 
                 "sampleRate":44100,
@@ -87,7 +87,7 @@ dirlist = {
                       },                                 
            
                 "JKU":{
-                       "medias":"jku/onsets/audio/",
+                       "medias":"jku/onsets/audio/flac/",
                        "gt":"jku/onsets/annotations/onsets/"
                        },
            

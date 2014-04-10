@@ -49,8 +49,9 @@ import scipy.fftpack as fft
 from scipy.io import wavfile
 from scipy.ndimage.filters import (maximum_filter, maximum_filter1d,
                                    uniform_filter1d)
+import conf
 
-SELF_AUDIO = True
+#SELF_AUDIO = False
 opts = {}
 
 class Filter(object):
@@ -170,7 +171,7 @@ class Wav(object):
     Wav Class is a simple wrapper around scipy.io.wavfile.
 
     """
-    def __init__(self, filename):
+    def __init__(self, audio,samplerate):
         """
         Creates a new Wav object instance of the given file.
 
@@ -178,7 +179,7 @@ class Wav(object):
 
         """
         # read in the audio
-        self.samplerate, self.audio = wavfile.read(filename)
+        self.samplerate, self.audio = samplerate,audio#        wavfile.read(filename)
         # set the length
         self.samples = np.shape(self.audio)[0]
         self.length = float(self.samples) / self.samplerate
@@ -751,7 +752,7 @@ def staticArgs(options):
     
     args.norm = ''
     args.fps = 200
-    args.frame_size = 2048
+    args.frame_size = options['frameSize']#2048
     args.ratio = 0.5
     args.max_bins = 3
     args.log = None
@@ -773,15 +774,15 @@ def staticArgs(options):
     return args
 
 #Load wav file and create the onset detection function      
-def compute(audio, options):
+def compute(audio):
     
-    args = staticArgs(options)
+    args = staticArgs(conf.opts)
     
     filt = None
     filterbank = None
 
     # open the wav file
-    w = Wav(audio)
+    w = Wav(np.array(audio),args.samplerate)
     # normalize audio
     if args.norm:
         w.normalize()
@@ -795,8 +796,8 @@ def compute(audio, options):
     # create filterbank if needed
     if args.filter:
         # (re-)create filterbank if the samplerate of the audio changes
-        if filt is None or filt.fs != w.samplerate:
-            filt = Filter(args.frame_size / 2, w.samplerate,
+        if filt is None or filt.fs != args.samplerate:
+            filt = Filter(args.frame_size / 2, args.samplerate,
                           args.bands, args.fmin, args.fmax, args.equal)
             filterbank = filt.filterbank
     # spectrogram

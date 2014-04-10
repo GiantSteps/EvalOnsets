@@ -67,10 +67,9 @@ def batch(fn):
     if not yn=="y" : return 0
     for n in confs:
         processes.add(subprocess.Popen(['python',dir, '-fi',n]))
-    if len(processes) >= max_processes:
-        os.wait()
-        processes.difference_update([
-            p for p in processes if p.poll() is not None])
+        while len(processes) >= max_processes:
+            os.wait()
+            processes.difference_update([p for p in processes if p.poll() is not None])
             
          
 #         
@@ -100,7 +99,7 @@ if __name__ == "__main__":
         execute(args.filename)
     else :
         if not args.folder:
-            args.folder = conf.PathToLocal+'Batch'
+            args.folder = conf.PathToLocal+'Batch/reduced_1JKU'
         batch(args.folder)
 
     

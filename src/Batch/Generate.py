@@ -52,9 +52,9 @@ def dictToStr(d):
 if __name__=="__main__":
 
     
-    var   = {'globalSettings.sampleRate':[44100,22050], 'globalSettings.frameSize':[512,1024,2056]}
+    var   = {'globalSettings.NoveltyName':['Nsdf','SuperFluxOnsets','essOnsetFunc','ModalOnsets'],'globalSettings.SliceName':['EssentiaPeaks','SuperFluxPeaks','ModalPeaks'], 'globalSettings.frameSize':[512,1024,2056]}
     
-    generateConfBatch(var)
+    generateConfBatch(var,'reduced_1JKU')
     
     
     

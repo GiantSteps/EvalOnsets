@@ -61,6 +61,7 @@ def compute(path):
         
 
 def computeAll():
+    
     fns = crawlpaths()
     
     for fn in fns:
