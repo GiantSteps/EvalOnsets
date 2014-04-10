@@ -46,13 +46,16 @@ def crawlParams():
 def setConfig():
     '''
     set all current parameters
+    
     '''
-    conf.loadFromConf()
     
+    conf.opts = getNamespace('globalSettings')
     
+    conf.initconf()
+
     Utils.fileMgmt.init()
-    
-    pp.loadFromConf()
+        
+    pp.opts['algo'] = getNamespace
     oN.loadFromConf()
     sL.loadFromConf()
     

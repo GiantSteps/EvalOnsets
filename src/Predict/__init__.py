@@ -94,11 +94,7 @@ def main():
     
     Utils.fileMgmt.init()
     
-    confM.linkparams(conf)
-    
-    confM.linkparams(pp)
-    confM.linkparams(oN.curalgo)
-    confM.linkparams(sl.curalgo)
+    confM.crawlParams()
     
     print confM.params.descriptorNames()
     confM.saveconf(conf.ODBStats+"/config.conf") 

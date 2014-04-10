@@ -5,13 +5,13 @@ import matplotlib.pyplot as plt
 import modal
 import modal.onsetdetection as od
 import modal.ui.plot as trplot
-
+import conf
 
 #Load wav file and create the onset detection function      
 def compute(features, opt):
-
+    onset_det = od.OnsetDetection()
     onset_det.peak_size = 3
-    onsets = onset_det.find_onsets(features) * odf.get_hop_size()
+    onsets = onset_det.find_onsets(features) * conf.opts["hopSize"]
     
 
 def plot():

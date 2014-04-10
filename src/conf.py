@@ -14,7 +14,7 @@ specific options
 fromFile = False;
 skipComputed = False;
 isPlot = True;
-onlyNRandomFiles = 1;
+onlyNRandomFiles = 0;
 
 
 '''
@@ -33,18 +33,18 @@ Set the root path for your dataset here
 PathToData = '/Users/carthach/GiantSteps-Share/datasets/'
 
 #Martin
-#PathToData = '/Users/mhermant/Documents/Work/Datasets/'
+PathToData = '/Users/mhermant/Documents/Work/Datasets/'
 
-PathToData = '/Volumes/GiantSteps-Share/datasets/'
+#PathToData = '/Volumes/GiantSteps-Share/datasets/'
 # PathToData = PathToLocal
 
 opts = {   "name":"globalSettings",
                 # curdataset = ODBdirs
                 'preprocess' : ["Intensity"],
-                "curdataset" : "JKU",
+                "curdataset" : "ODB",
                 "configName" : "_default",
 
-                "NoveltyName": "essOnsetFunc",
+                "NoveltyName": "ModalOnsets",
                 "SliceName" : "EssentiaPeaks",
 
                 "sampleRate":44100,
@@ -128,6 +128,8 @@ ODBPredicted = PathToLocal+opts['curdataset']+"/"+opts['configName']+'/predicted
 ODBStats = PathToLocal+opts['curdataset']+"/"+opts['configName']+'/stats/'
 
 
+
+
 onsetsufix = ['.txt','.onsets','.onset']
 
 '''
@@ -145,9 +147,7 @@ if not os.path.exists(ODBStats):
     
 ################
  
- 
-def updateconf():
-    confM.update(opts)
+
     
 #This sets all the paths
 def initconf():    
@@ -175,11 +175,10 @@ def initconf():
     if not os.path.exists(ODBStats):
         os.makedirs(ODBStats)
 
+def loadDict(d):
+    opts = d
+    initconf()
 #When this is imported run the initconf method to set the variables    
 initconf()
 
 
-def loadFromConf():
-    import Utils.Configurable as confM
-    opts = confM.getNamespace('globalSettings')
-    initconf()

@@ -30,13 +30,7 @@ from essentia import *
         
 
 
-def generateConfBatch(conf,range,var):
-    confM.loadconf(conf)
-    confM.loadconfrange(range)
-    batchname = ''
-    print
-    if var in confM.ranges.descriptorNames():
-        return 0
+
              
             
 
@@ -91,15 +85,17 @@ if __name__ == "__main__":
     process onset Detections following a given configuration file or folder
  
     """)
+    
+
      
     p.add_argument('-fi', dest='filename', action='store',default='',
                help='filename ')
     p.add_argument('-fo', dest='folder', action='store',default='',
-               help='filename ')
+               help='foldername ')
     
      
     args = p.parse_args()
-    print args
+
     if args.filename : 
         execute(args.filename)
     else :

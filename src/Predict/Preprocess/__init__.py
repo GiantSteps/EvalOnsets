@@ -1,7 +1,7 @@
 
 from Predict.Preprocess import Intensity
 import conf
-# import Utils.Configurable as confM
+
 
 opts={
       'name' : "preprocess",
@@ -17,7 +17,7 @@ def loadFromConf():
         return 0
 #         globals()[a].opts = confM
         
-
+    
 def compute(audio):
     for a in opts['algo']:
         alg = globals()[a]
