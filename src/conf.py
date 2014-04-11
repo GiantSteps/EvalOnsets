@@ -14,7 +14,7 @@ specific options
 fromFile = False;
 skipComputed = False;
 isPlot = True;
-onlyNRandomFiles = 0;
+onlyNRandomFiles = 4;
 
 
 '''

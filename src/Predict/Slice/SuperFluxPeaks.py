@@ -776,9 +776,11 @@ def compute(features,opt):
     
     args = staticArgs(opt) 
     if(isinstance(features[0],list) or isinstance(features[0],np.ndarray)):
-        features = features[0]
+        features = np.mean(features,axis=0)
     o = Onset(features, args.fps, args.online)
         
     o.detect(args.threshold, args.combine, args.pre_avg, args.pre_max, args.post_avg, args.post_max, args.delay)
 
     return o.detections
+
+

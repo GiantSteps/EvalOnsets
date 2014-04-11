@@ -72,9 +72,14 @@ def batch(fn):
             os.wait()
             processes.difference_update([p for p in processes if p.poll() is not None])
           
-    while len(processes) >0 :
-        True    
-#         
+    while len(processes) > 0:
+        try :
+            os.wait()
+        except OSError:
+            break
+            print len(processes)
+    
+    print 'batch over'     
 
 
 if __name__ == "__main__":

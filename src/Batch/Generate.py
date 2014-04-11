@@ -55,7 +55,7 @@ if __name__=="__main__":
     
     var   = {'globalSettings.NoveltyName':['SuperFluxOnsets','essOnsetFunc','ModalOnsets'],'globalSettings.SliceName':['EssentiaPeaks','SuperFluxPeaks','ModalPeaks'], 'globalSettings.frameSize':[512,1024,2056]}
     
-    generateConfBatch(var,'JKU')
+    generateConfBatch(var,'tst')
     
     
     

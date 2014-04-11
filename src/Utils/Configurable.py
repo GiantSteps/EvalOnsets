@@ -36,11 +36,11 @@ def crawlParams():
     params.clear()
     linkparams(conf)
     linkparams(pp)
-    print params.descriptorNames()
+    
     linkparams(oN.curalgo)
-    print params.descriptorNames()
+    
     linkparams(sL.curalgo)
-    print params.descriptorNames()
+    
 
 
 def setConfig():
@@ -103,7 +103,7 @@ def setparams(dictin,rangedict={}):
                     
                 '''normal'''
             else :
-                print x + " " + str(val) 
+                #print x + " " + str(val) 
                 params.set(name+'.'+x,val)
         
         for x,val in rangedict.iteritems():

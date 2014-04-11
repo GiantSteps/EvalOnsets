@@ -28,7 +28,7 @@ def getnBests(num,di):
 
         
 def main():
-    stats = getResults(conf.PathToLocal)
+    stats = getResults(conf.PathToLocal+'/JKU')
     res = getnBests(15,stats)
     f = open(conf.PathToLocal+'bestRes.txt','w')
     f.write(str(res))
