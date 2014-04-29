@@ -14,14 +14,6 @@ from Utils.fileMgmt import *
 
 
 
-
-
-
-
-
-
-
-
 def eval(predGt):
 
 
@@ -116,7 +108,8 @@ def main():
     
     print "execution time : "+str(time.clock()-exectime)  
     
-    
+
+
 if __name__ == "__main__":
     import Utils.Configurable
     Utils.Configurable.crawlParams()

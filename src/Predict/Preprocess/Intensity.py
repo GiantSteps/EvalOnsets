@@ -10,7 +10,7 @@ import numpy as np
 
 opts = {"name" : "Intensity",
         "normalize" : 1,
-        "att":5}
+        "att":0}
 opts_r = {"at":[0,5,1]}
 
 

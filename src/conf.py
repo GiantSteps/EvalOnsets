@@ -14,7 +14,7 @@ specific options
 fromFile = False;
 skipComputed = False;
 isPlot = True;
-onlyNRandomFiles = 4;
+onlyNRandomFiles = 0;
 
 
 '''
@@ -35,25 +35,25 @@ PathToData = '/Users/carthach/GiantSteps-Share/datasets/'
 #Martin
 PathToData = '/Users/mhermant/Documents/Work/Datasets/'
 
-PathToData = '/Volumes/GiantSteps-Share/datasets/'
+#PathToData = '/Volumes/GiantSteps-Share/datasets/'
 # PathToData = PathToLocal
 
 opts = {   "name":"globalSettings",
                 # curdataset = ODBdirs
-                'preprocess' : ["Intensity"],
+                'preprocess' : ["Intensity","WaveShape"],
                 "curdataset" : "JKU",
                 "configName" : "_default",
 
                 "NoveltyName": "SuperFluxOnsets",
-                "SliceName" : "EssentiaPeaks",
+                "SliceName" : "SuperFluxPeaks",
 
-                "sampleRate":44100,
-                "frameSize":512,
+                "sampleRate":22050,
+                "frameSize":2048,
                 "hopSize":512,
                 "zeroPadding":0,
                 "windowType":"hann",
                 
-                "doubleOnsetT" : 0.1
+                "doubleOnsetT" : 0.08
                 }
 '''
 file Options

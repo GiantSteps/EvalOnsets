@@ -24,7 +24,9 @@ def removeDoubles(time_onsets,threshold=0.08):
     while t < len(time_onsets):
         if time_onsets[t] - time_onsets[t-1] < threshold: time_onsets.pop(t)
         else: t += 1
-        
+    return time_onsets
+
+
 def compute(path):
 #     pool = fileMgmt.pool
     print path
@@ -32,7 +34,7 @@ def compute(path):
     if 'SELF_AUDIO' in dir(oN.curalgo):
         audio = path
     else:
-        loader = MonoLoader(filename=path)
+        loader = MonoLoader(filename=path,sampleRate=conf.opts["sampleRate"])
         audio = loader()
         
         audio = pp.compute(audio)
@@ -55,7 +57,7 @@ def compute(path):
         
         
         
-    removeDoubles(t_ons)
+    t_ons=removeDoubles(t_ons,conf.opts["doubleOnsetT"])
             
     pool.setEvt("pred",essentia.array(t_ons))
         

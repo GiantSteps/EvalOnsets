@@ -1,5 +1,7 @@
 
-from Predict.Preprocess import Intensity
+from Predict.Preprocess import Intensity, WaveShape
+from Predict.Preprocess import anHarmonic
+
 import conf
 
 
@@ -19,8 +21,15 @@ def loadFromConf():
         
     
 def compute(audio):
+    
+    import time
+    
+    curt = time.clock()
     for a in opts['algo']:
         alg = globals()[a]
         audio = alg.compute(audio)
+    
+    print time.clock() - curt
+    
     return audio
-
+    

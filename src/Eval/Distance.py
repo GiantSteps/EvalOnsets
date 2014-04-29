@@ -11,25 +11,25 @@ import numpy as np
 import conf
 
 
-def toClass(pred,tru):
-    pos = []
-    mis = []
-    neg = []
-    for i in tru:
-        found = False
-        for j in pred:
-            if (len(pos)==0 or j>pos[-1][0]) and abs(i - j) < threshold:
-                pos+=[[j,abs(i-j)]]
-                found = True
-                break
-            if j>i+threshold : break
-        if not found :
-            mis+= [i,0]
-    
-            
-    neg = [[y,0] for y in pred if not (y in [x[0] for x in pos] or  y in [x[0] for x in mis])]
-    
-    return pos,mis,neg
+# def toClass(pred,tru):
+#     pos = []
+#     mis = []
+#     neg = []
+#     for i in tru:
+#         found = False
+#         for j in pred:
+#             if (len(pos)==0 or j>pos[-1][0]) and abs(i - j) < threshold:
+#                 pos+=[[j,abs(i-j)]]
+#                 found = True
+#                 break
+#             if j>i+threshold : break
+#         if not found :
+#             mis+= [i,0]
+#     
+#             
+#     neg = [[y,0] for y in pred if not (y in [x[0] for x in pos] or  y in [x[0] for x in mis])]
+#     
+#     return pos,mis,neg
 
 
 def preRec(pred,true):
@@ -40,7 +40,7 @@ def preRec(pred,true):
     recall = len(pos)*1./(len(pos)+len(mis))
     return pre,recall
 
-def toBinPT(pred,tru,isBin=False):
+def toBinPT(pred,tru,ClassOut=False,isFloat=False):
     threshold = conf.opts['doubleOnsetT']
     res=[]
     trub=[]
@@ -54,8 +54,11 @@ def toBinPT(pred,tru,isBin=False):
                 '''
                 true positive
                 '''
-                if isBin :res+=[1]
-                else:res+=[1-abs(pred[i]-tru[j])/threshold]
+
+                if ClassOut :res+=[3]
+                elif isFloat :res+=[1-abs(pred[i]-tru[j])/threshold]
+                else        :res+=[1]
+                
                 trub+=[1]
                 i+=1;
                 j+=1;
@@ -65,6 +68,7 @@ def toBinPT(pred,tru,isBin=False):
                 '''
                 false positive
                 '''
+
                 i+=1
                 trub+=[0]
                 res+=[1]
@@ -73,6 +77,7 @@ def toBinPT(pred,tru,isBin=False):
                 '''
                 false negative
                 '''
+
                 j+=1
                 res+=[0]
                 trub+=[1]
@@ -103,20 +108,18 @@ def toBinPT(pred,tru,isBin=False):
             
 def analyze(pred,t):
         
-        if not pred :
+        if not list(pred) :
             print "found empty pred for analysing" 
             return 0
         if not t :
             print "found empty groundtrouth for analysing" 
             return 0
 
-        predb,tb =  toBinPT(pred,t,True)
+        predb,tb =  toBinPT(pred,t)
         
         
         if conf.isPlot : plot(t,pred,tb,predb)
         
-
-#         return np.mean(tb-predb);
         pre,rec,f,dumb = precision_recall_fscore_support(tb,predb)
         
         classtrue = 1

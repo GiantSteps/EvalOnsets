@@ -153,13 +153,15 @@ def writeStats(l):
 
 def getStats(fn):
     res = {}    
-    f=open(fn,'r')
-    cs = f.readlines()
-    for s in cs:
-        res[str(s.split(':')[0])]=float(s.split(':')[1])
+    if(os.path.exists(fn)):
+        f=open(fn,'r')
+        cs = f.readlines()
+        for s in cs:
+            res[str(s.split(':')[0].split(' ')[1])]=float(s.split(':')[1])
+        
+        
+        f.close()
     
-    
-    f.close()
     return res
 
 

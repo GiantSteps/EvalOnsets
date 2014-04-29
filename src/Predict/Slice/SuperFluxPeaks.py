@@ -52,368 +52,9 @@ from scipy.ndimage.filters import (maximum_filter, maximum_filter1d,
 
 import conf
 
-opts={}
-class Filter(object):
-    """
-    Filter Class.
+opts = {"name":"SuperFluxPeaks",
+        }
 
-    """
-    def __init__(self, ffts, fs, bands=24, fmin=27.5, fmax=16000, equal=False):
-        """
-        Creates a new Filter object instance.
-
-        :param ffts:  number of FFT coefficients
-        :param fs:    sample rate of the audio file
-        :param bands: number of filter bands
-        :param fmin:  the minimum frequency [Hz]
-        :param fmax:  the maximum frequency [Hz]
-        :param equal: normalize the area of each band to 1
-
-        """
-        # samplerate
-        self.fs = fs
-        # reduce fmax if necessary
-        if fmax > fs / 2:
-            fmax = fs / 2
-        # get a list of frequencies
-        frequencies = self.frequencies(bands, fmin, fmax)
-        # conversion factor for mapping of frequencies to spectrogram bins
-        factor = (fs / 2.0) / ffts
-        # map the frequencies to the spectrogram bins
-        frequencies = np.round(np.asarray(frequencies) / factor).astype(int)
-        # only keep unique bins
-        frequencies = np.unique(frequencies)
-        # filter out all frequencies outside the valid range
-        frequencies = [f for f in frequencies if f < ffts]
-        # number of bands
-        bands = len(frequencies) - 2
-        assert bands >= 3, 'cannot create filterbank with less than 3 ' \
-                           'frequencies'
-        # init the filter matrix with size: ffts x filter bands
-        self.filterbank = np.zeros([ffts, bands], dtype=np.float)
-        # process all bands
-        for band in range(bands):
-            # edge & center frequencies
-            start, mid, stop = frequencies[band:band + 3]
-            # create a triangular filter
-            triang_filter = self.triang(start, mid, stop, equal)
-            self.filterbank[start:stop, band] = triang_filter
-
-    @staticmethod
-    def frequencies(bands, fmin, fmax, a=440):
-        """
-        Returns a list of frequencies aligned on a logarithmic scale.
-
-        :param bands: number of filter bands per octave
-        :param fmin:  the minimum frequency [Hz]
-        :param fmax:  the maximum frequency [Hz]
-        :param a:     frequency of A0 [Hz]
-        :returns:     a list of frequencies
-
-        Using 12 bands per octave and a=440 corresponding to the MIDI notes.
-
-        """
-        # factor 2 frequencies are apart
-        factor = 2.0 ** (1.0 / bands)
-        # start with A0
-        freq = a
-        frequencies = [freq]
-        # go upwards till fmax
-        while freq <= fmax:
-            # multiply once more, since the included frequency is a frequency
-            # which is only used as the right corner of a (triangular) filter
-            freq *= factor
-            frequencies.append(freq)
-        # restart with a and go downwards till fmin
-        freq = a
-        while freq >= fmin:
-            # divide once more, since the included frequency is a frequency
-            # which is only used as the left corner of a (triangular) filter
-            freq /= factor
-            frequencies.append(freq)
-        # sort frequencies
-        frequencies.sort()
-        # return the list
-        return frequencies
-
-    @staticmethod
-    def triang(start, mid, stop, equal=False):
-        """
-        Calculates a triangular window of the given size.
-
-        :param start: start bin (with value 0, included in the filter)
-        :param mid:   center bin (of height 1, unless norm is True)
-        :param stop:  end bin (with value 0, not included in the filter)
-        :param equal: normalize the area of the filter to 1
-        :returns:     a triangular shaped filter
-
-        """
-        # height of the filter
-        height = 1.
-        # normalize the height
-        if equal:
-            height = 2. / (stop - start)
-        # init the filter
-        triang_filter = np.empty(stop - start)
-        # rising edge
-        rising = np.linspace(0, height, (mid - start), endpoint=False)
-        triang_filter[:mid - start] = rising
-        # falling edge
-        falling = np.linspace(height, 0, (stop - mid), endpoint=False)
-        triang_filter[mid - start:] = falling
-        # return
-        return triang_filter
-
-
-class Wav(object):
-    """
-    Wav Class is a simple wrapper around scipy.io.wavfile.
-
-    """
-    def __init__(self, filename):
-        """
-        Creates a new Wav object instance of the given file.
-
-        :param filename: name of the .wav file
-
-        """
-        # read in the audio
-        self.samplerate, self.audio = wavfile.read(filename)
-        # set the length
-        self.samples = np.shape(self.audio)[0]
-        self.length = float(self.samples) / self.samplerate
-        # set the number of channels
-        try:
-            # multi channel files
-            self.channels = np.shape(self.audio)[1]
-        except IndexError:
-            # catch mono files
-            self.channels = 1
-
-    def attenuate(self, attenuation):
-        """
-        Attenuate the audio signal.
-
-        :param attenuation: attenuation level given in dB
-
-        """
-        att = np.power(np.sqrt(10.), attenuation / 10.)
-        self.audio = np.asarray(self.audio / att, dtype=self.audio.dtype)
-
-    def downmix(self):
-        """
-        Down-mix the audio signal to mono.
-
-        """
-        if self.channels > 1:
-            self.audio = np.mean(self.audio, axis=-1, dtype=self.audio.dtype)
-
-    def normalize(self):
-        """
-        Normalize the audio signal.
-
-        """
-        self.audio = self.audio.astype(np.float) / np.max(self.audio)
-
-
-class Spectrogram(object):
-    """
-    Spectrogram Class.
-
-    """
-    def __init__(self, wav, frame_size=2048, fps=200, filterbank=None,
-                 log=False, mul=1, add=1, online=True, block_size=2048):
-        """
-        Creates a new Spectrogram object instance and performs a STFT on the
-        given audio.
-
-        :param wav:        a Wav object
-        :param frame_size: the size for the window [samples]
-        :param fps:        frames per second
-        :param online:     work in online mode (i.e. use only past information)
-
-        """
-        # init some variables
-        self.wav = wav
-        self.fps = fps
-        if add <= 0:
-            raise ValueError("a positive value must be added before taking "
-                             "the logarithm")
-        if mul <= 0:
-            raise ValueError("a positive value must be multiplied before "
-                             "taking the logarithm")
-        # derive some variables
-        # use floats so that seeking works properly
-        self.hop_size = float(self.wav.samplerate) / float(self.fps)
-        self.frames = int(self.wav.samples / self.hop_size)
-        self.ffts = int(frame_size / 2)
-        # initial number equal to ffts, can change if filters are used
-        self.bins = int(frame_size / 2)
-        # init spec matrix
-        if filterbank is None:
-            # init with number of FFT frequency bins
-            self.spec = np.empty([self.frames, self.ffts])
-        else:
-            # init with number of filter bands
-            self.spec = np.empty([self.frames, np.shape(filterbank)[1]])
-            # set number of bins
-            self.bins = np.shape(filterbank)[1]
-            # set the block size
-            if not block_size or block_size > self.frames:
-                block_size = self.frames
-            # init block counter
-            block = 0
-            # init a matrix of that size
-            spec = np.zeros([block_size, self.ffts])
-        # create windowing function for DFT
-        self.window = np.hanning(frame_size)
-        try:
-            # the audio signal is not scaled, scale the window accordingly
-            max_value = np.iinfo(self.wav.audio.dtype).max
-            self._fft_window = self.window / max_value
-        except ValueError:
-            self._fft_window = self.window
-        # step through all frames
-        for frame in range(self.frames):
-            # seek to the right position in the audio signal
-            if online:
-                # step back one frame_size after moving forward 1 hop_size
-                # so that the current position is at the end of the window
-                seek = int((frame + 1) * self.hop_size - frame_size)
-            else:
-                # step back half of the frame_size so that the frame represents
-                # the centre of the window
-                seek = int(frame * self.hop_size - frame_size / 2)
-            # read in the right portion of the audio
-            if seek >= self.wav.samples:
-                # end of file reached
-                break
-            elif seek + frame_size >= self.wav.samples:
-                # end behind the actual audio, append zeros accordingly
-                zeros = np.zeros(seek + frame_size - self.wav.samples)
-                signal = self.wav.audio[seek:]
-                signal = np.append(signal, zeros)
-            elif seek < 0:
-                # start before the actual audio, pad with zeros accordingly
-                zeros = np.zeros(-seek)
-                signal = self.wav.audio[0:seek + frame_size]
-                signal = np.append(zeros, signal)
-            else:
-                # normal read operation
-                signal = self.wav.audio[seek:seek + frame_size]
-            # multiply the signal with the window function
-            signal = signal * self._fft_window
-            # perform DFT
-            stft = fft.fft(signal)[:self.ffts]
-            # is block-wise processing needed?
-            if filterbank is None:
-                # no filtering needed, thus no block wise processing needed
-                self.spec[frame] = np.abs(stft)
-            else:
-                # filter in blocks
-                spec[frame % block_size] = np.abs(stft)
-                # end of a block or end of the signal reached
-                end_of_block = (frame + 1) / block_size > block
-                end_of_signal = (frame + 1) == self.frames
-                if end_of_block or end_of_signal:
-                    start = block * block_size
-                    stop = min(start + block_size, self.frames)
-                    filtered_spec = np.dot(spec[:stop - start], filterbank)
-                    self.spec[start:stop] = filtered_spec
-                    # increase the block counter
-                    block += 1
-            # next frame
-        # take the logarithm
-        if log:
-            np.log10(mul * self.spec + add, out=self.spec)
-
-
-class SpectralODF(object):
-    """
-    The SpectralODF class implements most of the common onset detection
-    function based on the magnitude or phase information of a spectrogram.
-
-    """
-    def __init__(self, spectrogram, ratio=0.5, max_bins=3, diff_frames=None):
-        """
-        Creates a new ODF object instance.
-
-        :param spectrogram: a Spectrogram object on which the detection
-                            functions operate
-        :param ratio:       calculate the difference to the frame which has the
-                            given magnitude ratio
-        :param max_bins:    number of bins for the maximum filter
-        :param diff_frames: calculate the difference to the N-th previous frame
-
-        If no diff_frames are given, they are calculated automatically based on
-        the given ratio.
-
-        """
-        self.s = spectrogram
-        # determine the number off diff frames
-        if diff_frames is None:
-            # get the first sample with a higher magnitude than given ratio
-            sample = np.argmax(self.s.window > ratio)
-            diff_samples = self.s.window.size / 2 - sample
-            # convert to frames
-            diff_frames = int(round(diff_samples / self.s.hop_size))
-            # set the minimum to 1
-            if diff_frames < 1:
-                diff_frames = 1
-        self.diff_frames = diff_frames
-        # number of bins used for the maximum filter
-        self.max_bins = max_bins
-
-    def diff(self, spec, pos=False, diff_frames=None, max_bins=None):
-        """
-        Calculates the difference of the magnitude spectrogram.
-
-        :param spec:        the magnitude spectrogram
-        :param pos:         only keep positive values
-        :param diff_frames: calculate the difference to the N-th previous frame
-        :param max_bins:    number of bins over which the maximum is searched
-
-        Note: If 'max_bins' is greater than 0, a maximum filter of this size
-              is applied in the frequency deirection. The difference of the
-              k-th frequency bin of the magnitude spectrogram is then
-              calculated relative to the maximum over m bins of the N-th
-              previous frame (e.g. m=3: k-1, k, k+1).
-
-              This method works only properly if the number of bands for the
-              filterbank is chosen carefully. A values of 24 (i.e. quarter-tone
-              resolution) usually yields good results.
-
-        """
-        # init diff matrix
-        diff = np.zeros_like(spec)
-        if diff_frames is None:
-            diff_frames = self.diff_frames
-        assert diff_frames >= 1, 'number of diff_frames must be >= 1'
-        # apply the maximum filter if needed
-        if max_bins > 0:
-            max_spec = maximum_filter(spec, size=[1, max_bins])
-        else:
-            max_spec = spec
-        # calculate the diff
-        diff[diff_frames:] = spec[diff_frames:] - max_spec[0:-diff_frames]
-        # keep only positive values
-        if pos:
-            diff *= (diff > 0)
-        return diff
-
-    # Onset Detection Functions
-    def superflux(self):
-        """
-        SuperFlux with a maximum filter trajectory tracking stage.
-
-        "Maximum Filter Vibrato Suppression for Onset Detection"
-        Sebastian Böck, and Gerhard Widmer
-        Proceedings of the 16th International Conferenceon Digital Audio
-        Effects (DAFx-13), Maynooth, Ireland, September 2013
-
-        """
-        return np.sum(self.diff(self.s.spec, pos=True, max_bins=self.max_bins),
-                      axis=1)
 
 
 class Onset(object):
@@ -563,9 +204,7 @@ def parser():
     (DAFx-13), Maynooth, Ireland, September 2013
 
     """)
-    # general options
-    p.add_argument('files', metavar='files', nargs='+',
-                   help='files to be processed')
+
     p.add_argument('-v', dest='verbose', action='store_true',
                    help='be verbose')
     p.add_argument('-s', dest='save', action='store_true', default=False,
@@ -628,6 +267,7 @@ def parser():
                           '[default=%(default)s]')
     # onset detection
     onset = p.add_argument_group('onset detection arguments')
+    
     onset.add_argument('-t', dest='threshold', action='store', type=float,
                        default=1.25, help='detection threshold '
                                           '[default=%(default)s]')
@@ -661,120 +301,27 @@ def parser():
     return args
 
 
-def main():
-    """
-    Main program.
 
-    """
-    import os.path
-    import glob
-    import fnmatch
-    # parse arguments
-    args = parser()
-    # determine the files to process
-    files = []
-    for f in args.files:
-        # check what we have (file/path)
-        if os.path.isdir(f):
-            # use all files in the given path
-            files = glob.glob(f + '/*.wav')
-        else:
-            # file was given, append to list
-            files.append(f)
-    # only process .wav files
-    files = fnmatch.filter(files, '*.wav')
-    files.sort()
-    # init filterbank
-    filt = None
-    filterbank = None
-    # process the files
-    for f in files:
-        if args.verbose:
-            print f
-        # use the name of the file without the extension
-        filename = os.path.splitext(f)[0]
-        # init Onset object
-        o = None
-        # do the processing stuff unless the activations are loaded from file
-        if args.load:
-            # load the activations from file
-            o = Onset("%s.act" % filename, args.fps, args.online, args.sep)
-        else:
-            # open the wav file
-            w = Wav(f)
-            # normalize audio
-            if args.norm:
-                w.normalize()
-                args.online = False  # switch to offline mode
-            # downmix to mono
-            if w.channels > 1:
-                w.downmix()
-            # attenuate signal
-            if args.att:
-                w.attenuate(args.att)
-            # create filterbank if needed
-            if args.filter:
-                # (re-)create filterbank if the samplerate of the audio changes
-                if filt is None or filt.fs != w.samplerate:
-                    filt = Filter(args.frame_size / 2, w.samplerate,
-                                  args.bands, args.fmin, args.fmax, args.equal)
-                    filterbank = filt.filterbank
-            # spectrogram
-            s = Spectrogram(w, args.frame_size, args.fps, filterbank, args.log,
-                            args.mul, args.add, args.online, args.block_size)
-            # use the spectrogram to create an SpectralODF object
-            sodf = SpectralODF(s, args.ratio, args.max_bins, args.diff_frames)
-            # perform detection function on the object
-            act = sodf.superflux()
-            # create an Onset object with the activations
-            o = Onset(act, args.fps, args.online)
-            if args.save:
-                # save the raw ODF activations
-                o.save("%s.act" % filename, args.sep)
-        # detect the onsets
-        o.detect(args.threshold, args.combine, args.pre_avg, args.pre_max,
-                 args.post_avg, args.post_max, args.delay)
-        # write the onsets to a file
-        o.write("%s.onsets.txt" % (filename))
-        # also output them to stdout if vebose
-        if args.verbose:
-            print 'detections:', o.detections
-        # continue with next file
         
 ######################## MTG STUFF ###################
 #Don't use the argument parser because it throws an error if you're not using the command line
-def staticArgs(options):
-    class args: pass
+def linkArgs(args):
+
     
     args.samplerate = int(conf.opts['sampleRate'])
     
-    args.norm = ''
-    args.fps = 200
+
+    args.fps = args.samplerate/int(conf.opts['hopSize'])
     args.frame_size = int(conf.opts['frameSize'])#2048
-    args.ratio = 0.5
-    args.max_bins = 3
-    args.log = None
-    args.mul = 1 
-    args.add = 1
-    args.online = None 
-    args.block_size = None
-    args.att = None
-    args.filter = None
-    args.diff_frames = None
-    args.threshold = 1.25
-    args.combine = 30
-    args.pre_avg = 100
-    args.pre_max = 30
-    args.post_avg = 70
-    args.post_max = 30
-    args.delay = 0
-    
+
     return args
 
 #Create a SuperFlux onset object with the onset functions previously computed then detect the onsets
 def compute(features,opt):
     
-    args = staticArgs(opt) 
+#     args = staticArgs(opt) 
+    args = parser()
+    args=linkArgs(args)
     if(isinstance(features[0],list) or isinstance(features[0],np.ndarray)):
         features = np.mean(features,axis=0)
     o = Onset(features, args.fps, args.online)

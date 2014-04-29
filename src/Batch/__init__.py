@@ -51,7 +51,7 @@ def batch(fn):
     import time
     
     processes = set()
-    max_processes = 8
+    max_processes = 10
 
         
     dir = os.path.realpath(os.path.abspath(os.path.split(inspect.getfile( inspect.currentframe() ))[0]))+"/__init__.py"

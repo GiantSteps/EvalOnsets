@@ -165,6 +165,9 @@ class Filter(object):
         # return
         return triang_filter
 
+"""
+Modified Version using essentia audio reader 
+"""
 
 class Wav(object):
     """
@@ -191,30 +194,7 @@ class Wav(object):
             # catch mono files
             self.channels = 1
 
-    def attenuate(self, attenuation):
-        """
-        Attenuate the audio signal.
 
-        :param attenuation: attenuation level given in dB
-
-        """
-        att = np.power(np.sqrt(10.), attenuation / 10.)
-        self.audio = np.asarray(self.audio / att, dtype=self.audio.dtype)
-
-    def downmix(self):
-        """
-        Down-mix the audio signal to mono.
-
-        """
-        if self.channels > 1:
-            self.audio = np.mean(self.audio, axis=-1, dtype=self.audio.dtype)
-
-    def normalize(self):
-        """
-        Normalize the audio signal.
-
-        """
-        self.audio = self.audio.astype(np.float) / np.max(self.audio)
 
 
 class Spectrogram(object):
@@ -417,135 +397,8 @@ class SpectralODF(object):
                       axis=1)
 
 
-class Onset(object):
-    """
-    Onset Class.
 
-    """
-    def __init__(self, activations, fps, online=True, sep=''):
-        """
-        Creates a new Onset object instance with the given activations of the
-        ODF (OnsetDetectionFunction). The activations can be read from a file.
-
-        :param activations: an array containing the activations of the ODF
-        :param fps:         frame rate of the activations
-        :param online:      work in online mode (i.e. use only past
-                            information)
-
-        """
-        self.activations = None     # activations of the ODF
-        self.fps = fps              # framerate of the activation function
-        self.online = online        # online peak-picking
-        self.detections = []        # list of detected onsets (in seconds)
-        # set / load activations
-        if isinstance(activations, np.ndarray):
-            # activations are given as an array
-            self.activations = activations
-        else:
-            # read in the activations from a file
-            self.load(activations, sep)
-
-    def detect(self, threshold, combine=30, pre_avg=100, pre_max=30,
-               post_avg=30, post_max=70, delay=0):
-        """
-        Detects the onsets.
-
-        :param threshold: threshold for peak-picking
-        :param combine:   only report 1 onset for N miliseconds
-        :param pre_avg:   use N miliseconds past information for moving average
-        :param pre_max:   use N miliseconds past information for moving maximum
-        :param post_avg:  use N miliseconds future information for mov. average
-        :param post_max:  use N miliseconds future information for mov. maximum
-        :param delay:     report the onset N miliseconds delayed
-
-        In online mode, post_avg and post_max are set to 0.
-
-        Implements the peak-picking method described in:
-
-        "Evaluating the Online Capabilities of Onset Detection Methods"
-        Sebastian Böck, Florian Krebs and Markus Schedl
-        Proceedings of the 13th International Society for Music Information
-        Retrieval Conference (ISMIR), 2012
-
-        """
-        # online mode?
-        if self.online:
-            post_max = 0
-            post_avg = 0
-        # convert timing information to frames
-        pre_avg = int(round(self.fps * pre_avg / 1000.))
-        pre_max = int(round(self.fps * pre_max / 1000.))
-        post_max = int(round(self.fps * post_max / 1000.))
-        post_avg = int(round(self.fps * post_avg / 1000.))
-        # convert to seconds
-        combine /= 1000.
-        delay /= 1000.
-        # init detections
-        self.detections = []
-        # moving maximum
-        max_length = pre_max + post_max + 1
-        max_origin = int(np.floor((pre_max - post_max) / 2))
-        mov_max = maximum_filter1d(self.activations, max_length,
-                                   mode='constant', origin=max_origin)
-        # moving average
-        avg_length = pre_avg + post_avg + 1
-        avg_origin = int(np.floor((pre_avg - post_avg) / 2))
-        mov_avg = uniform_filter1d(self.activations, avg_length,
-                                   mode='constant', origin=avg_origin)
-        # detections are activation equal to the maximum
-        detections = self.activations * (self.activations == mov_max)
-        # detections must be greater or equal than the mov. average + threshold
-        detections = detections * (detections >= mov_avg + threshold)
-        # convert detected onsets to a list of timestamps
-        last_onset = 0
-        for i in np.nonzero(detections)[0]:
-            onset = float(i) / float(self.fps) + delay
-            # only report an onset if the last N miliseconds none was reported
-            if onset > last_onset + combine:
-                self.detections.append(onset)
-                # save last reported onset
-                last_onset = onset
-
-    def write(self, filename):
-        """
-        Write the detected onsets to the given file.
-
-        :param filename: the target file name
-
-        Only useful if detect() was invoked before.
-
-        """
-        with open(filename, 'w') as f:
-            for pos in self.detections:
-                f.write(str(pos) + '\n')
-
-    def save(self, filename, sep):
-        """
-        Save the onset activations to the given file.
-
-        :param filename: the target file name
-        :param sep: separator between activation values
-
-        Note: using an empty separator ('') results in a binary numpy array.
-
-        """
-        print filename, sep
-        self.activations.tofile(filename, sep=sep)
-
-    def load(self, filename, sep):
-        """
-        Load the onset activations from the given file.
-
-        :param filename: the target file name
-        :param sep: separator between activation values
-
-        Note: using an empty separator ('') results in a binary numpy array.
-
-        """
-        self.activations = np.fromfile(filename, sep=sep)
-
-
-def parser(path):
+def parser():
     """
     Parses the command line arguments.
 
@@ -564,8 +417,8 @@ def parser(path):
 
     """)
     # general options
-    p.add_argument('files', metavar='files', nargs='+',
-                   help='files to be processed')
+#     p.add_argument('files', metavar='files', nargs='+',
+#                    help='files to be processed')
     p.add_argument('-v', dest='verbose', action='store_true',
                    help='be verbose')
     p.add_argument('-s', dest='save', action='store_true', default=False,
@@ -628,6 +481,7 @@ def parser(path):
                           '[default=%(default)s]')
     # onset detection
     onset = p.add_argument_group('onset detection arguments')
+    
     onset.add_argument('-t', dest='threshold', action='store', type=float,
                        default=1.25, help='detection threshold '
                                           '[default=%(default)s]')
@@ -653,7 +507,7 @@ def parser(path):
     p.add_argument('--version', action='version',
                    version='%(prog)spec 1.01 (2014-03-30)')
     # parse arguments
-    args = p.parse_args(['files',path])
+    args = p.parse_args()
     # print arguments
     if args.verbose:
         print args
@@ -661,138 +515,35 @@ def parser(path):
     return args
 
 
-def main(path):
-    """
-    Main program.
-
-    """
-    import os.path
-    import glob
-    import fnmatch
-    # parse arguments
-    args = parser(path)
-    # determine the files to process
-    files = []
-    for f in args.files:
-        # check what we have (file/path)
-        if os.path.isdir(f):
-            # use all files in the given path
-            files = glob.glob(f + '/*.wav')
-        else:
-            # file was given, append to list
-            files.append(f)
-    # only process .wav files
-    files = fnmatch.filter(files, '*.wav')
-    files.sort()
-    # init filterbank
-    filt = None
-    filterbank = None
-    # process the files
-    for f in files:
-        if args.verbose:
-            print f
-        # use the name of the file without the extension
-        filename = os.path.splitext(f)[0]
-        # init Onset object
-        o = None
-        # do the processing stuff unless the activations are loaded from file
-        if args.load:
-            # load the activations from file
-            o = Onset("%s.act" % filename, args.fps, args.online, args.sep)
-        else:
-            # open the wav file
-            w = Wav(f)
-            # normalize audio
-            if args.norm:
-                w.normalize()
-                args.online = False  # switch to offline mode
-            # downmix to mono
-            if w.channels > 1:
-                w.downmix()
-            # attenuate signal
-            if args.att:
-                w.attenuate(args.att)
-            # create filterbank if needed
-            if args.filter:
-                # (re-)create filterbank if the samplerate of the audio changes
-                if filt is None or filt.fs != w.samplerate:
-                    filt = Filter(args.frame_size / 2, w.samplerate,
-                                  args.bands, args.fmin, args.fmax, args.equal)
-                    filterbank = filt.filterbank
-            # spectrogram
-            s = Spectrogram(w, args.frame_size, args.fps, filterbank, args.log,
-                            args.mul, args.add, args.online, args.block_size)
-            # use the spectrogram to create an SpectralODF object
-            sodf = SpectralODF(s, args.ratio, args.max_bins, args.diff_frames)
-            # perform detection function on the object
-            act = sodf.superflux()
-            return act
-            
-            # create an Onset object with the activations
-            o = Onset(act, args.fps, args.online)
-            if args.save:
-                # save the raw ODF activations
-                o.save("%s.act" % filename, args.sep)
-        # detect the onsets
-        o.detect(args.threshold, args.combine, args.pre_avg, args.pre_max,
-                 args.post_avg, args.post_max, args.delay)
-        # write the onsets to a file
-        o.write("%s.onsets.txt" % (filename))
-        # also output them to stdout if vebose
-        if args.verbose:
-            print 'detections:', o.detections
-        # continue with next file
-
 
 #Don't use the argument parser because it throws an error if you're not using the command line
-def staticArgs(options):
-    class args: pass
-    
-    args.samplerate = int(options['sampleRate'])
+def linkArgs(args):
+
+
+    args.samplerate = int(conf.opts['sampleRate'])
     
     args.norm = ''
-    args.fps = 200
-    args.frame_size = int(options['frameSize'])#2048
-    args.ratio = 0.5
-    args.max_bins = 3
-    args.log = None
-    args.mul = 1 
-    args.add = 1
-    args.online = None 
-    args.block_size = None
-    args.att = None
-    args.filter = None
-    args.diff_frames = None
-    args.threshold = 1.25
-    args.combine = 30
-    args.pre_avg = 100
-    args.pre_max = 30
-    args.post_avg = 70
-    args.post_max = 30
-    args.delay = 0
+    args.fps = int(conf.opts['sampleRate'])/int(conf.opts['hopSize'])
+    args.frame_size = int(conf.opts['frameSize'])#2048
+
     
     return args
 
 #Load wav file and create the onset detection function      
 def compute(audio):
+
+    args = parser()
+    #link to current framework
+    args = linkArgs(args)
     
-    args = staticArgs(conf.opts)
     
     filt = None
     filterbank = None
 
     # open the wav file
     w = Wav(np.array(audio),args.samplerate)
-    # normalize audio
-    if args.norm:
-        w.normalize()
-        args.online = False  # switch to offline mode
-    # downmix to mono
-    if w.channels > 1:
-        w.downmix()
-    # attenuate signal
-    if args.att:
-        w.attenuate(args.att)
+    
+    
     # create filterbank if needed
     if args.filter:
         # (re-)create filterbank if the samplerate of the audio changes
@@ -813,7 +564,11 @@ def compute(audio):
 
 if __name__ == "__main__":
     import matplotlib.pyplot as plt
-    superf = main('/Users/mhermant/Documents/Work/Datasets/ODB/sounds/2-uncle_mean.wav')
+    import essentia.standard
+    
+    path = '/Users/mhermant/Documents/Work/Datasets/ODB/sounds/2-uncle_mean.wav'
+    l = essentia.standard.MonoLoader(filename = path)
+    superf = compute(l())
     print superf
     
     plt.plot(superf)
