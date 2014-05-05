@@ -9,7 +9,7 @@ import numpy as np
 # confM.getNamespace("att")
 
 opts = {"name" : "Intensity",
-        "normalize" : 1,
+        "normalize" :0,
         "att":0}
 opts_r = {"at":[0,5,1]}
 
@@ -21,7 +21,7 @@ def compute(audio):
     normalize / attenuate signal by "att"(dB)
     """
     if opts["normalize"]:
-        audio = audio.astype(np.float) / np.max(audio)
+        audio = audio / np.max(audio)
     
     if opts["att"]:
         att = np.power(np.sqrt(10.), opts['att'] / 10.)

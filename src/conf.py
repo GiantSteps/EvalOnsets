@@ -13,7 +13,7 @@ specific options
 
 fromFile = False;
 skipComputed = False;
-isPlot = True;
+isPlot = False;
 onlyNRandomFiles = 0;
 
 
@@ -44,12 +44,12 @@ opts = {   "name":"globalSettings",
                 "curdataset" : "JKU",
                 "configName" : "_default",
 
-                "NoveltyName": "SuperFluxOnsets",
-                "SliceName" : "SuperFluxPeaks",
+                "NoveltyName": "pitchYin",
+                "SliceName" : "EssentiaPeaks",
 
                 "sampleRate":22050,
                 "frameSize":2048,
-                "hopSize":512,
+                "hopSize":256,
                 "zeroPadding":0,
                 "windowType":"hann",
                 

@@ -90,7 +90,9 @@ if __name__=="__main__":
              'globalSettings.SliceName':['EssentiaPeaks','SuperFluxPeaks'],
              'globalSettings.curdataset':['JKU'],
              'globalSettings.frameSize':[512,1024,2048],
+             
              #'preprocess.algo.FreqMedian.ratio':[0,0.05,0.1],
+             
              'preprocess.algo.WaveShape.gain':[.1,.2,.3],
              'preprocess.algo.WaveShape.thresh':[.01,.1,.2]
              }

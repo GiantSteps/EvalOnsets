@@ -86,28 +86,28 @@ def setparams(dictin,rangedict={}):
     if not name in params.descriptorNames():
         global params
         for x,val in dictin.iteritems():
-            
-            '''adding list of string'''
-            if(isinstance(val,list) and isinstance(val[0],str)): 
-                for s in val:
-                    params.add(name+'.'+x,s)
-                
-                '''adding dict (TODO recursive method)'''
-            elif isinstance(val,dict): 
-                for s,v in val.iteritems():
-                    if isinstance(v,dict) :
-                        for s2,v2 in v.iteritems():
-                            params.set(name+'.'+x+'.'+s+'.'+s2,v2)
-                    else :
-                        params.set(name+'.'+x+'.'+s,v)
+            if val:
+                '''adding list of string'''
+                if(isinstance(val,list) and isinstance(val[0],str)): 
+                    for s in val:
+                        params.add(name+'.'+x,s)
                     
-                '''normal'''
-            else :
-                #print x + " " + str(val) 
-                params.set(name+'.'+x,val)
-        
-        for x,val in rangedict.iteritems():
-            ranges.set(name+'.'+x,val)
+                    '''adding dict (TODO recursive method)'''
+                elif isinstance(val,dict): 
+                    for s,v in val.iteritems():
+                        if isinstance(v,dict) :
+                            for s2,v2 in v.iteritems():
+                                params.set(name+'.'+x+'.'+s+'.'+s2,v2)
+                        else :
+                            params.set(name+'.'+x+'.'+s,v)
+                        
+                    '''normal'''
+                else :
+                    #print x + " " + str(val) 
+                    params.set(name+'.'+x,val)
+            
+            for x,val in rangedict.iteritems():
+                ranges.set(name+'.'+x,val)
             
     else : print "already added to conf pool"
     
@@ -134,6 +134,7 @@ def getNamespace(name,isDict = False):
     
 
 def setDict(di):
+    global params
     for k,v in di.iteritems():
         params.set(k,v)
         

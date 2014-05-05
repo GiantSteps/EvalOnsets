@@ -10,6 +10,7 @@ import Nsdf
 import SuperFluxOnsets
 import conf
 import ModalOnsets
+import pitchYin
 # import Utils.Configurable as confM
 
 curalgo = globals()[conf.opts["NoveltyName"]]#essOnsetFunc

@@ -90,8 +90,10 @@ def CrawlComplementarity(path):
         print str(curiter*100./totaliter)+"% computing : "+str(x)
         if stats[x[0]] and stats[x[1]] :
             combinedStats = getComplementarity(preds[x[0]],preds[x[1]], gts,statName)
-            preStats = (stats[x[0]][statName]+stats[x[1]][statName] )/2
-            res[str(x)]=combinedStats-preStats
+            
+            preStats = max(stats[x[0]][statName],stats[x[1]][statName] )
+            if combinedStats-preStats>0:
+                res[str(x)]=[combinedStats-preStats]
         curiter+=1
     
     return sorted(res.iteritems(), key=operator.itemgetter(1))
@@ -111,8 +113,8 @@ def main():
 if __name__=="__main__":
     import operator
     path = conf.PathToLocal+'JKU'
-    main()
-    #print CrawlComplementarity(path)
+    #main()
+    print CrawlComplementarity(path)
         
     
     #main()
