@@ -1,5 +1,5 @@
 
-from Predict.Preprocess import Intensity, WaveShape
+from Predict.Preprocess import Intensity, WaveShape,SpectralWhitening
 from Predict.Preprocess import anHarmonic
 
 import conf

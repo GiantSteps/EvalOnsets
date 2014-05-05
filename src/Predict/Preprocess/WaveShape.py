@@ -23,16 +23,11 @@ from essentia.standard import *
 import essentia
 opts = {"name" : "WaveShape",
         
-        "p1x" : 0,
-        "p1y" : 0,
-        "p2x" : 0.25,
-        "p2y" : 0,
-        "p3x" : 0.8,
-        "p3y" : 0.8,
-        "p4x" : 1,
-        "p4y" : 1,
-        "normalize":True,
+        "LUTx"   :[0,.2,.4,.5,.9,1],
+        "LUTy"   :[0,.1,.3,.5,.8,1],
         
+        "normalize":0,
+        "spline":1
         
         }
 
@@ -47,15 +42,10 @@ def compute(audio):
     """
     compress/expand
     """
-    f = waveshaper(p1x=opts["p1x"],
-                       p1y=opts["p1y"],
-                       p2x=opts["p2x"],
-                       p2y=opts["p2y"],
-                       p3x=opts["p3x"],
-                       p3y=opts["p3y"],
-                       p4x=opts["p4x"],
-                       p4y=opts["p4y"],
-                       normalize = opts["normalize"]
+    f = waveshaper(xPoints=essentia.array(opts["LUTx"]),
+                   yPoints=essentia.array(opts["LUTy"]),
+                   normalize = True if opts["normalize"] else False,
+                   spline = True if opts["spline"] else False,
                        )
     
     audio = f(essentia.array(audio))
@@ -87,16 +77,14 @@ def compute(audio):
 
 def test():
     import time
-    
+    import matplotlib.pyplot as plt
     a=np.linspace(-1.5,1.5,num=1000000)
-    print a
+
     t= time.clock()
     a1 = compute(a)
-    print time.clock()-t
-    t= time.clock()
-    global opts
-    opts["type"]=""
-    a2=compute(a)
+    plt.plot(a)
+    plt.plot(a1)
+    plt.show()
     print time.clock()-t
     return a1
 

@@ -17,14 +17,14 @@ from bisect import bisect_left
 import matplotlib.pyplot as pl
 
 
-opts = {"name" : "Whitening",
-        "ratio":0.08
+opts = {"name" : "SpectralWhitening",
+        "numPeaks":8
         
         }
 
 
 
-opts_r = {"ratio":[.1,.9,0.1],}
+
 
 
 
@@ -42,7 +42,7 @@ def compute(audio):
     windowType  = conf.opts['windowType']
  
     frameRate = float(sampleRate)/float(hopSize)
-    whitenf = Whitener(sampleRate=sampleRate)
+    whitenf = Whitener(sampleRate=sampleRate,peaksNumber=opts["numPeaks"],hopSize=hopSize,frameSize=frameSize)
     
     
     audio = whitenf(audio)
@@ -85,7 +85,7 @@ def compute(audio):
 #         n_frames += 1
 #         start_of_frame += hopSize
 #         
-    return essentia.array(audioout)
+    return essentia.array(audio)
 
 
 

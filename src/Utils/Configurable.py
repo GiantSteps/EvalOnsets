@@ -97,6 +97,7 @@ def setparams(dictin,rangedict={}):
                     for s,v in val.iteritems():
                         if isinstance(v,dict) :
                             for s2,v2 in v.iteritems():
+                                
                                 params.set(name+'.'+x+'.'+s+'.'+s2,v2)
                         else :
                             params.set(name+'.'+x+'.'+s,v)

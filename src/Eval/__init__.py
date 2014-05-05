@@ -67,7 +67,8 @@ def plotstats(meas):
     plt.xticks(range(len(v)), curFiles.keys(), size='small',rotation=90)
     plt.tight_layout();
     plt.savefig(conf.ODBStats+"stats.png")
-    plt.show()
+    
+    if conf.isPlot:plt.show()
      
      
      
@@ -102,7 +103,7 @@ def main():
         i+=1
     writeStats(meas)
     meas = np.array(meas)
-    if conf.isPlot: plotstats(meas)
+    plotstats(meas)
     print meas
     # print np.mean(meas)
     

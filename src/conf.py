@@ -40,14 +40,14 @@ PathToData = '/Users/mhermant/Documents/Work/Datasets/'
 
 opts = {   "name":"globalSettings",
                 # curdataset = ODBdirs
-                'preprocess' : ["Intensity","WaveShape"],
+                'preprocess' : ["SpectralWhitening"],
                 "curdataset" : "JKU",
                 "configName" : "_default",
 
-                "NoveltyName": "pitchYin",
+                "NoveltyName": "essOnsetFunc",
                 "SliceName" : "EssentiaPeaks",
 
-                "sampleRate":22050,
+                "sampleRate":44100,
                 "frameSize":2048,
                 "hopSize":256,
                 "zeroPadding":0,
