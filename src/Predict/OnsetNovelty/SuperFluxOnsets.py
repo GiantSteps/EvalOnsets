@@ -255,6 +255,7 @@ class Spectrogram(object):
         except ValueError:
             self._fft_window = self.window
         # step through all frames
+
         for frame in range(self.frames):
             # seek to the right position in the audio signal
             if online:
@@ -282,11 +283,15 @@ class Spectrogram(object):
             else:
                 # normal read operation
                 signal = self.wav.audio[seek:seek + frame_size]
+
             # multiply the signal with the window function
             signal = signal * self._fft_window
+
             # perform DFT
             stft = fft.fft(signal)[:self.ffts]
             # is block-wise processing needed?
+
+
             if filterbank is None:
                 # no filtering needed, thus no block wise processing needed
                 self.spec[frame] = np.abs(stft)
@@ -304,9 +309,12 @@ class Spectrogram(object):
                     # increase the block counter
                     block += 1
             # next frame
+
         # take the logarithm
+      
         if log:
             np.log10(mul * self.spec + add, out=self.spec)
+ 
 
 
 class SpectralODF(object):
@@ -372,11 +380,14 @@ class SpectralODF(object):
         assert diff_frames >= 1, 'number of diff_frames must be >= 1'
         # apply the maximum filter if needed
         if max_bins > 0:
+
             max_spec = maximum_filter(spec, size=[1, max_bins])
         else:
             max_spec = spec
         # calculate the diff
         diff[diff_frames:] = spec[diff_frames:] - max_spec[0:-diff_frames]
+
+        
         # keep only positive values
         if pos:
             diff *= (diff > 0)
@@ -568,8 +579,10 @@ if __name__ == "__main__":
     
     path = '/Users/mhermant/Documents/Work/Datasets/ODB/sounds/2-uncle_mean.wav'
     l = essentia.standard.MonoLoader(filename = path)
+    import time
+    t=time.clock()
     superf = compute(l())
-    print superf
+    print time.clock()-t
     
     plt.plot(superf)
     plt.show()
