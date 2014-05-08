@@ -8,6 +8,7 @@ an onset novelty function has to return a list of novelty functions
 import essOnsetFunc
 import Nsdf
 import SuperFluxOnsets
+import SuperFluxOnsets2
 import conf
 import ModalOnsets
 import pitchYin

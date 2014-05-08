@@ -133,11 +133,11 @@ def writeStats(l):
     recallavg = 0
     fmeasavg=0
     precavg = 0
-    
+
     for i in l:
-        recallavg+=i['recall']
-        fmeasavg+=i['f-measure']
-        precavg+=i['precision']
+            recallavg+=i['recall']
+            fmeasavg+=i['f-measure']
+            precavg+=i['precision']
     recallavg/=len(l)
     fmeasavg/=len(l)
     precavg/=len(l)

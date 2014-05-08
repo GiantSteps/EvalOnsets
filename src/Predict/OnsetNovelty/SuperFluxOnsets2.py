@@ -55,7 +55,7 @@ from essentia.standard import *
 import essentia
 
 #SELF_AUDIO = False
-opts = {}
+opts = {"name":"SuperFluxOnsets2"}
 
 
 def frequenciesComp(bands, fmin, fmax,ffts,sampleRate=44100,a=440):
@@ -145,7 +145,7 @@ def compute(audio):
         
 
         
-    d,tst = dilateDifff(bandsF)
+    d = dilateDifff(bandsF)
     print time.clock()-t
     return d
 

@@ -2,7 +2,7 @@
 
 import cwt
 from Predict.Slice import EssentiaPeaks
-import SuperFluxPeaks
+import SuperFluxPeaks,SuperFluxPeaks2
 import ModalPeaks
 import conf
 

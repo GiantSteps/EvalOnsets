@@ -97,10 +97,13 @@ def main():
     meas=[]
     i = 0
     for fn in pgts:
+        cd = eval(pgts[fn])
+        if isinstance(cd,dict):
+            meas+=[cd]
         
-        meas+=[eval(pgts[fn])]
         if conf.isPlot: plot(fn,meas[-1])
         i+=1
+
     writeStats(meas)
     meas = np.array(meas)
     plotstats(meas)

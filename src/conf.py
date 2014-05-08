@@ -13,7 +13,7 @@ specific options
 
 fromFile = False;
 skipComputed = False;
-isPlot = False;
+isPlot = True;
 onlyNRandomFiles = 0;
 
 
@@ -40,12 +40,12 @@ PathToData = '/Users/mhermant/Documents/Work/Datasets/'
 
 opts = {   "name":"globalSettings",
                 # curdataset = ODBdirs
-                'preprocess' : ["SpectralWhitening"],
+                'preprocess' : ["Intensity"],
                 "curdataset" : "JKU",
                 "configName" : "_default",
 
-                "NoveltyName": "essOnsetFunc",
-                "SliceName" : "EssentiaPeaks",
+                "NoveltyName": "SuperFluxOnsets",
+                "SliceName" : "SuperFluxPeaks2",
 
                 "sampleRate":44100,
                 "frameSize":2048,
